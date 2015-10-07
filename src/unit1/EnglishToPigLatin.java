@@ -57,9 +57,14 @@ public class EnglishToPigLatin
 	private static final String SENTINEL = "oneday";
 	
 	/**
-	 * The Array of Strings that are currently being evaluated.
+	 * An array of Strings that are currently being evaluated.
 	 */
 	private static ArrayList<String> currentWords = new ArrayList<String>();
+	
+	/**
+	 * An array of boolean values that correspond the the capitalization of words in the {@link #currentWords} list.
+	 */
+	private static ArrayList<Boolean> capitalization = new ArrayList<Boolean>();
 	
 	/**
 	 * Checks if a given String is a single character in the English {@link #ALPHABET}.<br>
@@ -70,7 +75,8 @@ public class EnglishToPigLatin
 	 */
 	public static boolean isSingleLetter(String word)
 	{
-		if(word.length() == 1 && Arrays.asList(ALPHABET).contains(word.charAt(0))) //If word is 1 char long and contains a letter of the ALPHABET.
+		//If word is 1 char long and contains a letter of the ALPHABET.
+		if(word.length() == 1 && Arrays.asList(ALPHABET).contains(word.charAt(0)))
 		{
 			return true;
 		}
@@ -100,7 +106,7 @@ public class EnglishToPigLatin
 	 * This method returns the index of the first vowel in a given String.
 	 * 
 	 * @param word - The String to evaluate.
-	 * @return The index of the first vowel of the given String.
+	 * @return The index of the first vowel of the given String, -1 if no vowels.
 	 */
 	public static int indexOfFirstVowel(String word)
 	{
@@ -112,13 +118,14 @@ public class EnglishToPigLatin
 					return i;
 			}
 		}
-		return 0;
+		return -1;
 	}
 	
 	/**
 	 * Translated individual letters to Pig Latin.
 	 * 
 	 * @param word - A character in the {@link #ALPHABET} to convert to Pig Latin.
+	 * @param capitilized - Wheather or not this word should be capitalized.
 	 * @return a translation of the given char to Pig Latin
 	 */
 	public static String translateLetter(String word)
@@ -134,6 +141,7 @@ public class EnglishToPigLatin
 	 * Ex. elephant --> elephantyay.
 	 * 
 	 * @param word - A word to be translated to Pig Latin with the Vowel Sound rules.
+	 * @param capitilized - Whether or not this word should be capitalized.
 	 * @return the given word translated to Pig Latin.
 	 */
 	public static String translateVowelSound(String word)
@@ -146,16 +154,20 @@ public class EnglishToPigLatin
 	 * Ex. Hello --> ellohay
 	 * 
 	 * @param word - A word to be translated to Pig Latin.
+	 * @param capitilized - Wheather or not this word should be capitalized.
 	 * @return The Pig Latin translation of the given word.
 	 */
 	public static String translateNormal(String word)
 	{
-		if(word.startsWith("qu")) //If the word starts with "qu"
-		{
+		//for "qu" words.
+		if(word.startsWith("qu")) 
 			return word.substring(2) + "quay"; //Quack --> ackquay
-		}
 		
-		//Non "qu" words
+		//For words with no vowels.
+		if(indexOfFirstVowel(word) <= -1)
+			return word + "ay";
+		
+		//Non "qu" words.
 		String prefix = word.substring(0, indexOfFirstVowel(word));
 		String suffix = word.substring(indexOfFirstVowel(word));
 		return suffix + prefix + "ay"; //Dirty --> irtyday
@@ -165,18 +177,25 @@ public class EnglishToPigLatin
 	 * This method returns a given word's Pig Latin translation.
 	 * 
 	 * @param word - A string to be translated to Pig Latin.
+	 * @param capitilized - Wheather or not this word should be capitalized.
 	 * @return The Pig Latin translation of the word given, returns null if String given is null.
 	 */
-	public static String translate(String word)
+	public static String translate(String word, boolean capitilized)
 	{
+		String tempWord = word;
 		if(word == null) //If word is null.
 			return null;
 		else if(isSingleLetter(word)) //If word is just a single letter
-			return translateLetter(word);
+			tempWord = translateLetter(word);
 		else if(startsWithVowelSound(word)) //If word starts with a vowel sound.
-			return translateVowelSound(word);
+			tempWord = translateVowelSound(word);
 		else //if word passes all other tests (A normal word).
-			return translateNormal(word);
+			tempWord = translateNormal(word);
+		
+		//Checks for Capitalization
+		if(capitilized)
+			tempWord = tempWord.substring(0, 1).toUpperCase() + tempWord.substring(1);
+		return tempWord;
 	}
 	
 	/**
@@ -187,36 +206,11 @@ public class EnglishToPigLatin
 		return PIG_NOISES[(int)(Math.random()*PIG_NOISES.length)]; //random int from 0 to Length of array (12)
 	}
 	
-//	/**
-//	 * This Program takes a word(Input), translates it to Pig Latin(Evaluate), then prints it to the console(Print).<br>
-//	 * Program also prints out random items from {@link #PIG_NOISES} every translation.
-//	 * 
-//	 * @param args - no command line arguments expected
-//	 */
-//	public static void main(String[] args) 
-//	{
-//		System.out.printf("This program translates words into Pig Latin.\nEnter '%s' to quit.\n\n", SENTINEL); //Initialization Message.
-//		
-//		//Print Loop
-//		while(true)
-//		{
-//			System.out.print("Next Input > ");
-//			currentWord = IN.next().toLowerCase();
-//			
-//			System.out.print("Porky Says > ");
-//			if(currentWord.equals(SENTINEL)) //If the input was the SENTINEL(oneday)
-//			{
-//				System.out.print(translate("goodbye"));
-//				IN.close();
-//				System.exit(0); //Terminate Program
-//			}
-//			else //If the input was NOT the SENTINEL(oneday)
-//				System.out.println(translate(currentWord) + " // " + speak() + "\n"); //Translate it to Pig Latin
-//		}
-//	}
-	
 	/**
-	 * This Program takes a word or sentence(Input), translates it to Pig Latin(Evaluate), then prints it to the console(Print).<br>
+	 * This Program takes a word or sentence(Input),<br>
+	 * translates it to Pig Latin(Evaluate),<br>
+	 * then prints it to the console(Print).<br><br>
+	 * 
 	 * Program also prints out random items from {@link #PIG_NOISES} every translation.
 	 * 
 	 * @param args - no command line arguments expected
@@ -229,29 +223,33 @@ public class EnglishToPigLatin
 		while(true)
 		{
 			System.out.print("Next Input > ");
-			Scanner lineIn = new Scanner(IN.nextLine().toLowerCase());
+			Scanner lineIn = new Scanner(IN.nextLine());
 			
 			//Gathers all words delimited by a space into currentWords
 			while(lineIn.hasNext())
 			{
-				currentWords.add(lineIn.next());
+				String tempWord = lineIn.next(); //Stores this word for analysis.
+				capitalization.add(Character.isUpperCase(tempWord.charAt(0))); //Adds its capitalization status to list.
+				currentWords.add(tempWord.toLowerCase()); //Adds this word to list (in lower case)
 			}
+			System.out.print("Porkey Says >");
 			
 			//Terminates Program via Sentinel (oneday)
 			if(currentWords.contains("oneday"))
 			{
 				lineIn.close();
 				IN.close();
+				System.out.println(" " + translate("goodbye", true) + "...");
 				System.exit(0);
 			}
 			
 			//Outputs all Strings in currentWords translated
-			System.out.print("Porkey Says >");
-			for(String s: currentWords)
+			for(int w = 0; w < currentWords.size(); w++)
 			{
-				System.out.print(" " + translate(s));
+				System.out.print(" " + translate(currentWords.get(w), capitalization.get(w)));
 			}
 			currentWords.clear();
+			capitalization.clear();
 			System.out.print(" // " + speak() + "\n\n");
 		}
 	}
