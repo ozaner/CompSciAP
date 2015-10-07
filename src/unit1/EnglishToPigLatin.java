@@ -1,5 +1,6 @@
 package unit1;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -56,9 +57,9 @@ public class EnglishToPigLatin
 	private static final String SENTINEL = "oneday";
 	
 	/**
-	 * The string that is currently being evaluated.
+	 * The Array of Strings that are currently being evaluated.
 	 */
-	private static String currentWord = new String();
+	private static ArrayList<String> currentWords = new ArrayList<String>();
 	
 	/**
 	 * Checks if a given String is a single character in the English {@link #ALPHABET}.<br>
@@ -186,8 +187,36 @@ public class EnglishToPigLatin
 		return PIG_NOISES[(int)(Math.random()*PIG_NOISES.length)]; //random int from 0 to Length of array (12)
 	}
 	
+//	/**
+//	 * This Program takes a word(Input), translates it to Pig Latin(Evaluate), then prints it to the console(Print).<br>
+//	 * Program also prints out random items from {@link #PIG_NOISES} every translation.
+//	 * 
+//	 * @param args - no command line arguments expected
+//	 */
+//	public static void main(String[] args) 
+//	{
+//		System.out.printf("This program translates words into Pig Latin.\nEnter '%s' to quit.\n\n", SENTINEL); //Initialization Message.
+//		
+//		//Print Loop
+//		while(true)
+//		{
+//			System.out.print("Next Input > ");
+//			currentWord = IN.next().toLowerCase();
+//			
+//			System.out.print("Porky Says > ");
+//			if(currentWord.equals(SENTINEL)) //If the input was the SENTINEL(oneday)
+//			{
+//				System.out.print(translate("goodbye"));
+//				IN.close();
+//				System.exit(0); //Terminate Program
+//			}
+//			else //If the input was NOT the SENTINEL(oneday)
+//				System.out.println(translate(currentWord) + " // " + speak() + "\n"); //Translate it to Pig Latin
+//		}
+//	}
+	
 	/**
-	 * This Program takes a word(Input), translates it to Pig Latin(Evaluate), then prints it to the console(Print).<br>
+	 * This Program takes a word or sentence(Input), translates it to Pig Latin(Evaluate), then prints it to the console(Print).<br>
 	 * Program also prints out random items from {@link #PIG_NOISES} every translation.
 	 * 
 	 * @param args - no command line arguments expected
@@ -200,50 +229,30 @@ public class EnglishToPigLatin
 		while(true)
 		{
 			System.out.print("Next Input > ");
-			currentWord = IN.next().toLowerCase();
+			Scanner lineIn = new Scanner(IN.nextLine().toLowerCase());
 			
-			System.out.print("Porky Says > ");
-			if(currentWord.equals(SENTINEL)) //If the input was the SENTINEL(oneday)
+			//Gathers all words delimited by a space into currentWords
+			while(lineIn.hasNext())
 			{
-				System.out.print(translate("goodbye"));
-				System.exit(0); //Terminate Program
+				currentWords.add(lineIn.next());
 			}
-			else //If the input was NOT the SENTINEL(oneday)
-				System.out.println(translate(currentWord) + " // " + speak() + "\n"); //Translate it to Pig Latin
+			
+			//Terminates Program via Sentinel (oneday)
+			if(currentWords.contains("oneday"))
+			{
+				lineIn.close();
+				IN.close();
+				System.exit(0);
+			}
+			
+			//Outputs all Strings in currentWords translated
+			System.out.print("Porkey Says >");
+			for(String s: currentWords)
+			{
+				System.out.print(" " + translate(s));
+			}
+			currentWords.clear();
+			System.out.print(" // " + speak() + "\n\n");
 		}
 	}
-	
-//	public static void main(String[] args) 
-//	{
-//		System.out.printf("This program translates words into Pig Latin.\nEnter '%s' to quit.\n\n", SENTINEL); //Initialization Message.
-//		
-//		//Print Loop
-//		while(true)
-//		{
-//			System.out.print("Next Input > ");
-//			Scanner lineIn = new Scanner(IN.next());
-//			while(lineIn.hasNext())
-//			{
-//				currentWords.add(lineIn.next());
-//			}
-//			
-//			System.out.print("Porky Says >");
-//			while(!currentWords.isEmpty())
-//			{
-//				for(String word: currentWords)
-//				{
-//					if(word.equals(SENTINEL)) //If the input was the SENTINEL(oneday)
-//					{
-//						System.out.print(translate("goodbye"));
-//						System.exit(0); //Terminate Program
-//					}
-//					else //If the input was NOT the SENTINEL(oneday)
-//					{
-//						System.out.println(" " + translate(word) + " // " + speak() + "\n"); //Translate it to Pig Latin
-//						currentWords.remove(word); //removes the word just translated from the currentWords list.
-//					}
-//				}
-//			}
-//		}
-//	}
 }
