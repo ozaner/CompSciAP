@@ -29,7 +29,7 @@ public class EnglishToPigLatin
 	 */
 	public static final String[] ALPHABET_PRONUNCIATION = 
 		{"ay","bee","cee","dee","ee","ef","gee","aitch","eye","jay","kay","el","em","en",
-				"oh","pee","cue","ar","ess","tee","you","vee","double-you","ex","wy","zee"};
+				"oh","pee","kyoo","ar","ess","tee","you","vee","double-you","ex","wy","zee"};
 	/**
 	 * This is an array of the lowercase vowels of the English alphabet in char form.
 	 */
@@ -75,12 +75,7 @@ public class EnglishToPigLatin
 	 */
 	public static boolean isSingleLetter(String word)
 	{
-		//If word is 1 char long and contains a letter of the ALPHABET.
-		if(word.length() == 1 && Arrays.asList(ALPHABET).contains(word.charAt(0)))
-		{
-			return true;
-		}
-		return false;
+		return word.length() == 1 && Character.isLetter(word.charAt(0)); //If word is 1 char long and contains a letter of the ALPHABET.
 	}
 	
 	/**
@@ -91,15 +86,7 @@ public class EnglishToPigLatin
 	 */
 	public static boolean startsWithVowelSound(String word)
 	{
-		if(Arrays.asList(VOWELS).contains(word.charAt(0))) //If the word starts with a vowel
-		{
-			return true;
-		}
-		else if(Arrays.asList(SILENT_H_WORDS).contains(word)) //If the word begins with a silent H
-		{
-			return true;
-		}
-		return false; //If fails both tests
+		return Arrays.asList(VOWELS).contains(word.charAt(0)) || Arrays.asList(SILENT_H_WORDS).contains(word);
 	}
 	
 	/**
@@ -125,15 +112,11 @@ public class EnglishToPigLatin
 	 * Translated individual letters to Pig Latin.
 	 * 
 	 * @param word - A character in the {@link #ALPHABET} to convert to Pig Latin.
-	 * @param capitilized - Wheather or not this word should be capitalized.
 	 * @return a translation of the given char to Pig Latin
 	 */
-	public static String translateLetter(String word)
+	public static String translateLetter(String word, boolean capitalization)
 	{
-		String wordPronunciation = ALPHABET_PRONUNCIATION[Arrays.asList(ALPHABET).indexOf(word.charAt(0))];
-		if(indexOfFirstVowel(wordPronunciation) > 0)
-			return wordPronunciation + "ay";
-		return wordPronunciation + "yay";
+		return translate(ALPHABET_PRONUNCIATION[Arrays.asList(ALPHABET).indexOf(word.charAt(0))], capitalization);
 	}
 	
 	/**
@@ -160,8 +143,10 @@ public class EnglishToPigLatin
 	public static String translateNormal(String word)
 	{
 		//for "qu" words.
-		if(word.startsWith("qu")) 
-			return word.substring(2) + "quay"; //Quack --> ackquay
+		if(word.contains("qu"))
+		{
+			return word.substring(word.indexOf("qu") + 2) + word.substring(0, word.indexOf("qu") + 2) + "ay";
+		}
 		
 		//For words with no vowels.
 		if(indexOfFirstVowel(word) <= -1)
@@ -180,20 +165,20 @@ public class EnglishToPigLatin
 	 * @param capitilized - Wheather or not this word should be capitalized.
 	 * @return The Pig Latin translation of the word given, returns null if String given is null.
 	 */
-	public static String translate(String word, boolean capitilized)
+	public static String translate(String word, boolean capitalized)
 	{
 		String tempWord = word;
 		if(word == null) //If word is null.
 			return null;
 		else if(isSingleLetter(word)) //If word is just a single letter
-			tempWord = translateLetter(word);
+			tempWord = translateLetter(word, capitalized);
 		else if(startsWithVowelSound(word)) //If word starts with a vowel sound.
 			tempWord = translateVowelSound(word);
 		else //if word passes all other tests (A normal word).
 			tempWord = translateNormal(word);
 		
 		//Checks for Capitalization
-		if(capitilized)
+		if(capitalized)
 			tempWord = tempWord.substring(0, 1).toUpperCase() + tempWord.substring(1);
 		return tempWord;
 	}
