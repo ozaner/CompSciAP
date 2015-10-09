@@ -38,7 +38,7 @@ public class EnglishToPigLatin
 	/**
 	 * A list of words that begin with a silent H.
 	 */
-	public static final String[] SILENT_H_WORDS = {"Honor", "Honest", "Honestly", "Honesty", "Heir", "Hour", "Hourly"};
+	public static final String[] SILENT_H_WORDS = {"honor", "honest", "honestly", "honesty", "heir", "hour", "hourly"};
 	
 	/**
 	 * A set of strings of Pig onomatopoeias in several languages.
