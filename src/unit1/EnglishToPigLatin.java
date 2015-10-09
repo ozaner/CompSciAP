@@ -54,7 +54,7 @@ public class EnglishToPigLatin
 	/**
 	 * The phrase to end the program. It is "done" in Pig Latin.
 	 */
-	private static final String SENTINEL = "oneday";
+	private static final String SENTINEL = "";
 	
 	/**
 	 * An array of Strings that are currently being evaluated.
@@ -143,7 +143,7 @@ public class EnglishToPigLatin
 	public static String translateNormal(String word)
 	{
 		//for "qu" words.
-		if(word.contains("qu"))
+		if(indexOfFirstVowel(word) > word.indexOf("qu"))
 		{
 			return word.substring(word.indexOf("qu") + 2) + word.substring(0, word.indexOf("qu") + 2) + "ay";
 		}
@@ -202,7 +202,7 @@ public class EnglishToPigLatin
 	 */
 	public static void main(String[] args) 
 	{
-		System.out.printf("This program translates words into Pig Latin.\nEnter '%s' to quit.\n\n", SENTINEL); //Initialization Message.
+		System.out.println("This program translates words into Pig Latin.\n"); //Initialization Message.
 		
 		//Print Loop
 		while(true)
@@ -219,8 +219,8 @@ public class EnglishToPigLatin
 			}
 			System.out.print("Porkey Says >");
 			
-			//Terminates Program via Sentinel (oneday)
-			if(currentWords.contains("oneday"))
+			//Terminates Program via Sentinel
+			if(currentWords.isEmpty())
 			{
 				lineIn.close();
 				IN.close();
