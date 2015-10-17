@@ -13,6 +13,9 @@ import java.util.Scanner;
  */
 public class StringTester
 {
+	/**
+	 * An array of Strings of the 7 days of the week.
+	 */
 	public static final String[] DAYS_OF_WEEK = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	
 	/**
@@ -30,8 +33,7 @@ public class StringTester
 	 */
 	private static String getRandomDay2()
 	{
-		Random rand = new Random();
-		return DAYS_OF_WEEK[rand.nextInt(DAYS_OF_WEEK.length)];
+		return DAYS_OF_WEEK[new Random().nextInt(DAYS_OF_WEEK.length)];
 	}
 	
 	/**
@@ -82,10 +84,10 @@ public class StringTester
 	}
 	
 	/**
-	 * This method formats a 10-digit NANP (U.S & Canada) phone number from a string.<br>
+	 * This method formats a 10-digit NANP (U.S & Canada) phone number from a Long.<br>
 	 * Ex. "1234567890" returns "(123) 456-7890.
 	 * 
-	 * @param str - The phone number to be translated.
+	 * @param number - The phone number to be translated.
 	 * @return A formated NANP phone number.
 	 */
 	private static String convertPhoneFormat(Long number)
@@ -96,11 +98,11 @@ public class StringTester
 		{
 			return "Not a valid 10-Digit Phone Number";
 		}
-		return String.format("(%s) %s-%s", str.substring(0, 3), str.substring(3,6), str.substring(6));
+		return String.format("(%s) %s-%s", str.substring(0, 3),str.substring(3,6), str.substring(6));
 	}
 	
 	/**
-	 * This method takes a given String and returns its revered form.
+	 * This method takes a given String and returns its reversed form.
 	 * 
 	 * @param str - The string to be reversed.
 	 * @return The revered form of the given String.
@@ -109,15 +111,12 @@ public class StringTester
 	{
 		String reversed = "";
 		for(int c = str.length()-1; c >= 0; c--)
-		{
 			reversed += str.charAt(c);
-		}
 		return reversed;
 	}
 	
 	/**
 	 * This method tests the string related methods in {@link StringTester}.
-	 * 
 	 * @param args - N/A
 	 */
 	public static void main(String[] args)
