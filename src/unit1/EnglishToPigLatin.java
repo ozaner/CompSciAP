@@ -54,6 +54,7 @@ public class EnglishToPigLatin
 	/**
 	 * The phrase to end the program. It is "done" in Pig Latin.
 	 */
+	@SuppressWarnings("unused")
 	private static final String SENTINEL = "";
 	
 	/**
@@ -143,7 +144,7 @@ public class EnglishToPigLatin
 	public static String translateNormal(String word)
 	{
 		//for "qu" words.
-		if(indexOfFirstVowel(word) > word.indexOf("qu"))
+		if(indexOfFirstVowel(word) <= word.indexOf("qu"))
 		{
 			return word.substring(word.indexOf("qu") + 2) + word.substring(0, word.indexOf("qu") + 2) + "ay";
 		}
