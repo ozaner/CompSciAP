@@ -88,10 +88,11 @@ public class StringTester
 	 * @param str - The phone number to be translated.
 	 * @return A formated NANP phone number.
 	 */
-	private static String convertPhoneFormat(String str)
+	private static String convertPhoneFormat(Long number)
 	{
+		String str = Long.toString(number);
 		//Checks to see if String is a valid number.
-		if(!str.matches("[0-9]+") || str.length() != 10)
+		if(str.length() != 10)
 		{
 			return "Not a valid 10-Digit Phone Number";
 		}
@@ -150,8 +151,8 @@ public class StringTester
 				System.out.println(charCount(in.next().charAt(0), in.next()));
 				break;
 			case 6:
-				System.out.println("Enter a 10 digit int...");
-				System.out.println(convertPhoneFormat(in.next()));
+				System.out.println("Enter a 10 digit long...");
+				System.out.println(convertPhoneFormat(in.nextLong()));
 				break;
 			case 7:
 				System.out.println("Enter a String...");
