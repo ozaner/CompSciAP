@@ -47,9 +47,7 @@ public class StringTester
 	private static String firstString(String str1, String str2)
 	{
 		if(str1.compareTo(str2) < 0)
-		{
 			return str1;
-		}
 		return str2;
 	}
 	
@@ -76,10 +74,8 @@ public class StringTester
 	{
 		int count = 0;
 		for(int i = 0; i < str.length(); i++)
-		{
 			if(str.charAt(i) == c)
 				count++;
-		}
 		return count;
 	}
 	
@@ -90,14 +86,23 @@ public class StringTester
 	 * @param number - The phone number to be translated.
 	 * @return A formated NANP phone number.
 	 */
-	private static String convertPhoneFormat(Long number)
+	private static String convertPhoneNumber(Long number)
 	{
-		String str = Long.toString(number);
+		return convertPhoneFormat(Long.toString(number));
+	}
+	
+	/**
+	 * This method formats a 10-digit NANP (U.S & Canada) phone number from a String.<br>
+	 * Ex. "1234567890" returns "(123) 456-7890.
+	 * 
+	 * @param str - The phone number to be translated.
+	 * @return A formated NANP phone number.
+	 */
+	private static String convertPhoneFormat(String str)
+	{
 		//Checks to see if String is a valid number.
 		if(str.length() != 10)
-		{
 			return "Not a valid 10-Digit Phone Number";
-		}
 		return String.format("(%s) %s-%s", str.substring(0, 3),str.substring(3,6), str.substring(6));
 	}
 	
@@ -151,7 +156,7 @@ public class StringTester
 				break;
 			case 6:
 				System.out.println("Enter a 10 digit long...");
-				System.out.println(convertPhoneFormat(in.nextLong()));
+				System.out.println(convertPhoneNumber(in.nextLong()));
 				break;
 			case 7:
 				System.out.println("Enter a String...");
