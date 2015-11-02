@@ -69,14 +69,6 @@ public class ArrayTester
 	 */
 	private static void reverseStringArray(String[] s)
 	{
-//	If I did have to create a method for this:
-/*
- *		String[] temp = new String[s.length]; //Makes a temporary array to store the values.
- *		for(int c = 0; c < s.length; c++)
- *			temp[c] = s[s.length-1-c];
- *
- * 		System.arraycopy(temp, 0, s, 0, s.length); //Copies the contents of temp top
- */
 		Collections.reverse(Arrays.asList(s));	
 	}
 	
