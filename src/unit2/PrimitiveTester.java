@@ -1,4 +1,4 @@
-package unit1.OtherExamples;
+package unit2;
 /**
  * A tester for the Java primitive types.
  * 
