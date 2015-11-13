@@ -2,8 +2,8 @@ package unit4;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
+import java.awt.event.KeyListener;
+
 import acm.graphics.G3DRect;
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
@@ -14,6 +14,7 @@ import acm.graphics.GOval;
 import acm.graphics.GPolygon;
 import acm.graphics.GRect;
 import acm.graphics.GRoundRect;
+import acm.graphics.GTurtle;
 import acm.program.GraphicsProgram;
 
 /** 
@@ -25,7 +26,7 @@ import acm.program.GraphicsProgram;
  * @author Ozaner Hansha
  **/
 @SuppressWarnings("serial")
-public class DrawObjects extends GraphicsProgram
+public class DrawObjects extends GraphicsProgram implements KeyListener
 {
 	/**
 	 * Displays a number of simple GObjects.
@@ -186,7 +187,27 @@ public class DrawObjects extends GraphicsProgram
 		// Find a jpg image of a stop sign.  Drag it into the project.
 		// Create a GImage with it and place it below your GCompound.
 		
-		GImage stopPNG = new GImage();
-		add(stopPNG);
+		GImage stopPic = new GImage("stopsign.jpg");
+		stopPic.scale(0.4);
+		add(stopPic, 620, 375);
+		
+		//------------------------------------------------
+		//                   GTurtle
+		//------------------------------------------------
+		addKeyListener(new DrawObjects());
+		
+		GTurtle[] gregArmy = new GTurtle[8];
+		
+		for(int x = 0; x <= gregArmy.length; x++)
+		{
+			add(gregArmy[x], 100, 200);
+		}
+		
+		int x = 0, y = 0;
+		while(x<1200)
+		{
+			
+			x += 20;
+		}
 	}
 } 
