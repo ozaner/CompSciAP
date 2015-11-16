@@ -39,15 +39,14 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 	{
 		new DrawObjects2().start(args);
 	}
-
-	/**
-	 * The space in between 2 shapes.
-	 */
-	int spaceFactor = 150;
 	
-	public static GPolygon newRegularPolygon(int sides, int size)
+	public static GPolygon newPolygon(int sides, int size)
 	{
-		GPolygon polygon = new GPolygon();
+		GPolygon polygon = new GPolygon(0,0);
+		for(int x = 0; x <= sides; x++)
+		{
+			polygon.addPolarEdge(size,(360/sides)*x);
+		}
 		return polygon;
 	}
 	
@@ -56,7 +55,8 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 	 * graphical interfaces, and to set up event handlers.  
 	 */
 	@Override	
-	public void init() {
+	public void init()
+	{
 		setSize(1000, 600);   // window width, window height
 		setBackground(Color.LIGHT_GRAY);
 
@@ -99,18 +99,18 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// Make the boundary color a different shade than the fill color.
 		// Make one of the ovals a circle.
 
-		GOval projOval = new GOval(100, 120);
+		GOval projOval = new GOval(200, 100);
 		projOval.setFilled(true);
 		projOval.setFillColor(Color.MAGENTA);
 		projOval.setColor(Color.BLACK);
-		add(projOval, spaceFactor*2, 100+spaceFactor); //add Parameter Placement Method
+		add(projOval, 300, 250); //add Parameter Placement Method
 		
 		//Orange-Outlined, White-Filled, Circle
 		GOval projOval2 = new GOval(120, 120);
 		projOval2.setFilled(true);
 		projOval2.setFillColor(Color.WHITE);
 		projOval2.setColor(Color.ORANGE);
-		projOval2.setLocation(spaceFactor*2, 100+spaceFactor*2); //Explicit Placement Method
+		projOval2.setLocation(300, 400); //Explicit Placement Method
 		add(projOval2);
 		
 		//------------------------------------------------
@@ -151,22 +151,11 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// If you have know about polar coordinate systems, look up and use the 
 		// addPolarEdge method.
 		
-		GPolygon redOctagon = newRegularPolygon(8, 50);
+		GPolygon redOctagon = newPolygon(8,45);
 		redOctagon.setFilled(true);
 		redOctagon.setColor(Color.WHITE);	
 		redOctagon.setFillColor(Color.RED);
-		add(redOctagon, 550, 400);
-		
-		//Temp
-		redOctagon.addVertex(0, 0);
-		redOctagon.addEdge(50,0);
-		redOctagon.addEdge(36,36);
-		redOctagon.addEdge(0,50);
-		redOctagon.addEdge(-36,36);
-		redOctagon.addEdge(-50,0);
-		redOctagon.addEdge(-36,-36);
-		redOctagon.addEdge(0,-50);
-		
+		add(redOctagon, 552, 523);
 
 		//------------------------------------------------
 		//                   GLabel
@@ -177,8 +166,8 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		
 		GLabel stopLabel = new GLabel("STOP");
 		stopLabel.setColor(Color.WHITE);
-		stopLabel.setFont(new Font("Times New Roman", 35, 25));
-		add(stopLabel,545,470);
+		stopLabel.setFont(new Font("Sans Sarif", 35, 25));
+		add(stopLabel,540,475);
 		
 		//------------------------------------------------
 		//                   GCompound
@@ -206,7 +195,7 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		
 		GImage stopPic = new GImage("stopsign.jpg");
 		stopPic.scale(0.4);
-		add(stopPic, 620, 375);
+		add(stopPic, 500, 375);
 		
 		//------------------------------------------------
 		//                   GTurtle
@@ -218,22 +207,22 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		for(int x = 0; x < gregArmy.length; x++)
 		{
 			gregArmy[x] = new GTurtle();
-			add(gregArmy[x], x*50+300, x*20+200);
+			add(gregArmy[x], x*50+200, x*20+200);
 		}
 		
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask(){
 		public void run(){
 		//"A.I" controlled greg army
-		for(int x = 0; x < gregArmy.length; x++){
+		for(GTurtle g: gregArmy){
 			switch(new Random().nextInt(5))
 			{
-			case 0:	gregArmy[x].left(5);		break;
-			case 1:	gregArmy[x].right(12);		break;
-			case 2:	gregArmy[x].forward(5);		break;
-			case 3:	gregArmy[x].setSpeed(1.5);	break;
-			case 4:	gregArmy[x].right(10);		break;
-			}}}}, 25, 25);
+			case 0:	g.left(5);		break;
+			case 1:	g.right(12);		break;
+			case 2:	g.forward(1);		break;
+			case 3:	g.setSpeed(1.5);	break;
+			case 4:	g.right(10);		break;
+			}}}}, 25, 5);
 		
 		//Game Logic Loop
 		while(true)
