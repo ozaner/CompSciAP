@@ -2,8 +2,11 @@ package unit4;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyListener;
-
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import acm.graphics.G3DRect;
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
@@ -194,20 +197,39 @@ public class DrawObjects extends GraphicsProgram implements KeyListener
 		//------------------------------------------------
 		//                   GTurtle
 		//------------------------------------------------
-		addKeyListener(new DrawObjects());
+		addKeyListeners();
 		
-		GTurtle[] gregArmy = new GTurtle[8];
-		
-		for(int x = 0; x <= gregArmy.length; x++)
+		//Instantiate and add GTurtles
+		GTurtle[] gregArmy = new GTurtle[5];
+		for(int x = 0; x < gregArmy.length; x++)
 		{
-			add(gregArmy[x], 100, 200);
+			gregArmy[x] = new GTurtle();
+			add(gregArmy[x], x*50+200, x*20+200);
 		}
 		
-		int x = 0, y = 0;
-		while(x<1200)
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask(){
+		public void run(){
+		//"A.I" controlled greg army
+		for(int x = 0; x < gregArmy.length; x++){
+			switch(new Random().nextInt(5))
+			{
+			case 0:	gregArmy[x].left(5);		break;
+			case 1:	gregArmy[x].right(12);		break;
+			case 2:	gregArmy[x].forward(1);		break;
+			case 3:	gregArmy[x].setSpeed(1.5);	break;
+			case 4:	gregArmy[x].right(10);		break;
+			}}}}, 25, 5);
+		
+		//Game Logic Loop
+		while(true)
 		{
-			
-			x += 20;
+			Point p = getMousePosition();
+			if(p != null)
+			{
+				gregArmy[1].setLocation(p.getX(), p.getY());
+				System.out.println(p);
+			}
 		}
 	}
 } 
