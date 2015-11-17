@@ -1,18 +1,19 @@
 package unit4;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import acm.graphics.G3DRect;
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
 import acm.graphics.GLabel;
 import acm.graphics.GLine;
-import acm.graphics.GMath;
 import acm.graphics.GOval;
 import acm.graphics.GPolygon;
 import acm.graphics.GRect;
@@ -38,6 +39,14 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 	public static void main(String[] args)
 	{
 		new DrawObjects2().start(args);
+	}
+	
+	public static Dimension space = new Dimension(0,0);
+	
+	public static Dimension addSpace(int w, int h)
+	{
+		space.setSize(space.width + w, space.height + h);
+		return space;
 	}
 	
 	public static GPolygon newPolygon(int sides, int size)
@@ -127,12 +136,12 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		//                   GPolygon
 		//------------------------------------------------
 
-		GPolygon triangle = new GPolygon();
-		triangle.addVertex(0, 0);  // lower left vertex
-		triangle.addEdge(150,0);   // edge to lower right vertex
-		triangle.addEdge(150*GMath.cosDegrees(120), -150*GMath.sinDegrees(120)); // edge to top vertex
+		GPolygon triangle = newPolygon(3, 150);
+//		triangle.addVertex(0, 0);  // lower left vertex
+//		triangle.addEdge(150,0);   // edge to lower right vertex
+//		triangle.addEdge(150*GMath.cosDegrees(120), -150*GMath.sinDegrees(120)); // edge to top vertex
 		triangle.setFilled(true);
-		triangle.setColor(Color.ORANGE);		
+		triangle.setColor(Color.ORANGE);
 		add(triangle, 500, 200);
 
 		// Make a trapezoid below the triangle.  Use a combination of
@@ -151,11 +160,11 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// If you have know about polar coordinate systems, look up and use the 
 		// addPolarEdge method.
 		
-		GPolygon redOctagon = newPolygon(8,45);
-		redOctagon.setFilled(true);
-		redOctagon.setColor(Color.WHITE);	
-		redOctagon.setFillColor(Color.RED);
-		add(redOctagon, 552, 523);
+		GPolygon octagon = newPolygon(8,45);
+		octagon.setFilled(true);
+		octagon.setColor(Color.WHITE);	
+		octagon.setFillColor(Color.RED);
+		add(octagon, 540, 500);
 
 		//------------------------------------------------
 		//                   GLabel
@@ -164,10 +173,10 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// Create a GLabel containing the string "STOP" and add it to
 		// the canvas so that it is centered inside the red hexagon.
 		
-		GLabel stopLabel = new GLabel("STOP");
-		stopLabel.setColor(Color.WHITE);
-		stopLabel.setFont(new Font("Sans Sarif", 35, 25));
-		add(stopLabel,540,475);
+		GLabel stopString = new GLabel("STOP");
+		stopString.setColor(Color.WHITE);
+		stopString.setFont(new Font("Sans Sarif", 35, 25));
+		add(stopString,530,460);
 		
 		//------------------------------------------------
 		//                   GCompound
@@ -177,6 +186,15 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// the STOP label, and a sign post.  Place it to the right of
 		// the polygons that you created above.	
 		
+		GPolygon redOctagon = newPolygon(8,45);
+		redOctagon.setFilled(true);
+		redOctagon.setColor(Color.WHITE);	
+		redOctagon.setFillColor(Color.RED);
+		add(redOctagon, 552, 523);
+		GLabel stopLabel = new GLabel("STOP");
+		stopLabel.setColor(Color.WHITE);
+		stopLabel.setFont(new Font("Sans Sarif", 35, 25));
+		add(stopLabel,540,475);
 		GRect post = new GRect(565,522,20,75);
 		post.setFilled(true);
 		post.setFillColor(Color.GRAY);
@@ -193,9 +211,8 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		// Find a jpg image of a stop sign.  Drag it into the project.
 		// Create a GImage with it and place it below your GCompound.
 		
-		GImage stopPic = new GImage("stopsign.jpg");
-		stopPic.scale(0.4);
-		add(stopPic, 500, 375);
+		GImage stopPic = new GImage("elmo.gif");
+		add(stopPic, 720, 375);
 		
 		//------------------------------------------------
 		//                   GTurtle
@@ -217,9 +234,9 @@ public class DrawObjects2 extends GraphicsProgram implements KeyListener
 		for(GTurtle g: gregArmy){
 			switch(new Random().nextInt(5))
 			{
-			case 0:	g.left(5);		break;
+			case 0:	g.left(5);			break;
 			case 1:	g.right(12);		break;
-			case 2:	g.forward(1);		break;
+			case 2:	g.forward(2);		break;
 			case 3:	g.setSpeed(1.5);	break;
 			case 4:	g.right(10);		break;
 			}}}}, 25, 5);
