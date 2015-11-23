@@ -48,7 +48,7 @@ public class DotIllusion extends GraphicsProgram
 	/**
 	 * The font of the String displayed in the center.
 	 */
-	private static final Font CENTER_FONT = new Font("Ariel", 1, 36);
+	private static final Font CENTER_FONT = new Font("Ariel", 1, 25);
 	
 	/**
 	 * The amount of dots to be displayed equidistant to the center of the window.
@@ -164,6 +164,7 @@ public class DotIllusion extends GraphicsProgram
 			public void componentResized(ComponentEvent e)
 			{
 				double scaleX = getWidth() / wid,  scaleY = getHeight() / ht;
+				
 				for (int i = 0; i < getElementCount(); i++)
 				{
 					Object obj = getElement(i);
@@ -186,11 +187,14 @@ public class DotIllusion extends GraphicsProgram
 	public void run()
 	{ 
 		while(true)
+		{
 			for(GOval c: DOTS)
 			{
 				c.setVisible(false);
 				pause(PAUSE_TIME);
 				c.setVisible(true);
 			}
+			//setSize(Math.max(getWidth(), getHeight()), Math.max(getWidth(), getHeight()));
+		}
 	}
 }
