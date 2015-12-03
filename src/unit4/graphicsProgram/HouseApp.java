@@ -2,8 +2,8 @@ package unit4.graphicsProgram;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
+import acm.graphics.GCompound;
 import acm.program.GraphicsProgram;
 
 /**
@@ -20,46 +20,33 @@ public class HouseApp extends GraphicsProgram
 	/**
 	 * The width and height of the application.
 	 */
-	public static final Dimension APP_SIZE = new Dimension(700,400);
+	public static final Dimension APP_SIZE = new Dimension(700,450);
 	
 	/**
 	 * Whether or not the program is displaying daytime. If false then it is nighttime.
 	 */
-	public static final boolean IS_DAY = true; 
+	public boolean isDay = true;
 	
 	/**
-	 * The house that is part of the scene
+	 * An array of all objects in the scene.
 	 */
-	public static House house = new House();
+	public Nighttimeable[] objects = 
+	{
+		new House(),new Sky(),new Grass(),new Street(), new Airplane()
+	};
 	
 	/**
-	 * The grass that is part of the scene
+	 * Places all objects in the Graphics Scene.
+	 * @param x - Width of the program window.
+	 * @param y - Height of the program window.
 	 */
-	public static Grass grass = new Grass();
-	
-	/**
-	 * The sky that is part of the scene
-	 */
-	public static Sky sky = new Sky();
-
-	/**
-	 * The sky that is part of the scene
-	 */
-	public static Airplane plane = new Airplane();
-	
-	/**
-	 * The street that is part of the scene
-	 */
-	public static Street street = new Street();
-	
 	public HouseApp(int x, int y)
 	{
 		setSize(x,y);
-		add(house);
-		add(grass);
-		add(sky);
-		add(street);
-		add(plane);
+		for(GCompound g: objects)
+		{
+			add(g);
+		}
 	}
 	
 	/* 
@@ -75,38 +62,47 @@ public class HouseApp extends GraphicsProgram
 	@Override
 	public void run()
 	{
-		setSize(APP_SIZE.width,APP_SIZE.height);
+		setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
 	}
 	
+	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		if(IS_DAY)
+		if(isDay)
 			setNightTime();
 		else
 			setDayTime();
 	}
 	
-	public static void setDayTime()
+	/**
+	 * Calls the {@link Nighttimeable#daytime()} method on all {@link OBJECTS} in the scene.
+	 */
+	public void setDayTime()
 	{
-		
+		for(Nighttimeable g: objects)
+		{
+			g.nighttime();
+		}
 	}
 	
-	public static void setNightTime()
+	/**
+	 * Calls the {@link Nighttimeable#nighttime()} method on all {@link OBJECTS} in the scene.
+	 */
+	public void setNightTime()
 	{
-		
+		for(Nighttimeable g: objects)
+		{
+			g.daytime();
+		}
 	}
 	
+	/**
+	 * The main method of the {@link HouseApp} program.<br>
+	 * Creates a new Graphics Scene.
+	 * @param args - Not expecting any command line input.
+	 */
 	public static void main(String[] args)
 	{
-		new HouseApp(700,350).start();
-		
-		
-//		while(true)
-//		{
-//			if(getWidth() >= getHeight())
-//				setSize((int)(getWidth()*ASPECT_RATIO_WIDTH), (int)(getWidth()*ASPECT_RATIO_HEIGHT));
-//			else
-//				setSize((int)(getHeight()*ASPECT_RATIO_WIDTH), (int)(getHeight()*ASPECT_RATIO_HEIGHT));
-//		}
+		new HouseApp((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight()).start();
 	}
 }

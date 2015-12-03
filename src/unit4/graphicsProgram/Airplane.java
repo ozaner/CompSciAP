@@ -1,9 +1,19 @@
 package unit4.graphicsProgram;
 
-import acm.graphics.GCompound;
-
 @SuppressWarnings("serial")
-public class Airplane extends GCompound
+public class Airplane extends Nighttimeable
 {
+
+	@Override
+	public void nighttime()
+	{
+
+	}
+
+	@Override
+	public void daytime()
+	{
+
+	}
 
 }
