@@ -48,7 +48,7 @@ public class DotIllusion extends GraphicsProgram
 	/**
 	 * The font of the String displayed in the center.
 	 */
-	private static final Font CENTER_FONT = new Font("Ariel", 1, 25);
+	private static final Font CENTER_FONT = new Font("Ariel", 1, 20);
 	
 	/**
 	 * The amount of dots to be displayed equidistant to the center of the window.

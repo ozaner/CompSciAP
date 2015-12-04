@@ -2,7 +2,6 @@ package unit4.graphicsProgram;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-
 import acm.graphics.GCompound;
 import acm.program.GraphicsProgram;
 
@@ -30,9 +29,9 @@ public class HouseApp extends GraphicsProgram
 	/**
 	 * An array of all objects in the scene.
 	 */
-	public Nighttimeable[] objects = 
+	public Object[] objects = 
 	{
-		new House(),new Sky(),new Grass(),new Street(), new Airplane()
+		new Sky(),new Grass(),new Street()
 	};
 	
 	/**
@@ -43,9 +42,9 @@ public class HouseApp extends GraphicsProgram
 	public HouseApp(int x, int y)
 	{
 		setSize(x,y);
-		for(GCompound g: objects)
+		for(Object g: objects)
 		{
-			add(g);
+			add((GCompound)g);
 		}
 	}
 	
@@ -68,31 +67,11 @@ public class HouseApp extends GraphicsProgram
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		if(isDay)
-			setNightTime();
-		else
-			setDayTime();
-	}
-	
-	/**
-	 * Calls the {@link Nighttimeable#daytime()} method on all {@link OBJECTS} in the scene.
-	 */
-	public void setDayTime()
-	{
-		for(Nighttimeable g: objects)
+		isDay = !isDay;
+		
+		for(Object g: objects)
 		{
-			g.nighttime();
-		}
-	}
-	
-	/**
-	 * Calls the {@link Nighttimeable#nighttime()} method on all {@link OBJECTS} in the scene.
-	 */
-	public void setNightTime()
-	{
-		for(Nighttimeable g: objects)
-		{
-			g.daytime();
+			((Nighttimeable)g).setLight(isDay);
 		}
 	}
 	
