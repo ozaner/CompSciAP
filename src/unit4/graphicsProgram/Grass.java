@@ -1,7 +1,11 @@
 package unit4.graphicsProgram;
 
 import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import acm.graphics.GCompound;
+import acm.graphics.GImage;
 import acm.graphics.GRect;
 
 @SuppressWarnings("serial")
@@ -10,6 +14,7 @@ public class Grass extends GCompound implements Nighttimeable
 	private GRect grass;
 	private Snowman[] snowmen = new Snowman[3];
 	private House house;
+	private GImage planeTakeOff;
 	
 	public Grass()
 	{
@@ -24,6 +29,10 @@ public class Grass extends GCompound implements Nighttimeable
 		house = new House(HouseApp.APP_SIZE.getWidth()*.2,HouseApp.APP_SIZE.getHeight()*.3);
 		add(house);
 		
+		//Plane take off
+		planeTakeOff = new GImage("planeTakeOff.gif",HouseApp.APP_SIZE.getWidth()*.7,0);
+		add(planeTakeOff);
+		
 		//3 Snowmen
 		snowmen[0] = new Snowman(HouseApp.APP_SIZE.getWidth()*.1,HouseApp.APP_SIZE.getHeight()*.4); //Left Snowman
 		snowmen[1] = new Snowman(HouseApp.APP_SIZE.getWidth()*.5,HouseApp.APP_SIZE.getHeight()*.5); //Middle Snowman
@@ -32,6 +41,22 @@ public class Grass extends GCompound implements Nighttimeable
 			add(s);
 	}
 
+	/**
+	 * Sets the {@link planeTakeOff} object invisible after 2.5 seconds.
+	 */
+	public void takeOffPlane()
+	{
+		new Timer().schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				planeTakeOff.setVisible(false);
+			}
+			
+		}, 2500);
+	}
+	
 	@Override
 	public void nighttime()
 	{

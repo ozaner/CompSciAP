@@ -2,6 +2,7 @@ package unit4.graphicsProgram;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+
 import acm.graphics.GCompound;
 import acm.program.GraphicsProgram;
 
@@ -62,6 +63,7 @@ public class HouseApp extends GraphicsProgram
 	public void run()
 	{
 		setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
+		((Grass)objects[1]).takeOffPlane();
 	}
 	
 	@Override
@@ -82,6 +84,7 @@ public class HouseApp extends GraphicsProgram
 	 */
 	public static void main(String[] args)
 	{
-		new HouseApp((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight()).start();
+		HouseApp app = new HouseApp((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
+		app.start();
 	}
 }
