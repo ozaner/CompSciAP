@@ -16,7 +16,6 @@ public class Sky extends GCompound implements Nighttimeable
 		//Sky
 		sky = new GRect(0,0,HouseApp.APP_SIZE.getWidth(),HouseApp.APP_SIZE.getHeight()*.5);
 		sky.setFilled(true);
-		sky.setColor(Color.CYAN);
 		add(sky);
 		
 		//Moon
@@ -26,6 +25,8 @@ public class Sky extends GCompound implements Nighttimeable
 		//Airplane-Santa
 		flyingObj = new FlyingObject();
 		add(flyingObj);
+		
+		daytime(); //init compound
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import acm.graphics.GRect;
 @SuppressWarnings("serial")
 public class Street extends GCompound implements Nighttimeable
 {
-
 	private GRect street;
 	
 	public Street()
@@ -20,15 +19,9 @@ public class Street extends GCompound implements Nighttimeable
 	}
 	
 	@Override
-	public void nighttime()
-	{
-		
-	}
+	public void nighttime(){}
 
 	@Override
-	public void daytime()
-	{
-		
-	}
+	public void daytime(){}
 
 }

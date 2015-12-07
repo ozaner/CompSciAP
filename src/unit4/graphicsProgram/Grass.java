@@ -22,7 +22,6 @@ public class Grass extends GCompound implements Nighttimeable
 		grass = new GRect(0,HouseApp.APP_SIZE.getHeight()*.35,
 				HouseApp.APP_SIZE.getWidth(),HouseApp.APP_SIZE.getHeight()*.5);
 		grass.setFilled(true);
-		grass.setFillColor(Color.GREEN);
 		add(grass);
 		
 		//House
@@ -30,8 +29,8 @@ public class Grass extends GCompound implements Nighttimeable
 		add(house);
 		
 		//Plane take off
-		planeTakeOff = new GImage("planeTakeOff.gif",HouseApp.APP_SIZE.getWidth()*.7,0);
-		add(planeTakeOff);
+		planeTakeOff = new GImage("planeTakeOff.gif");
+		add(planeTakeOff,HouseApp.APP_SIZE.getWidth()-planeTakeOff.getWidth(),0);
 		
 		//3 Snowmen
 		snowmen[0] = new Snowman(HouseApp.APP_SIZE.getWidth()*.1,HouseApp.APP_SIZE.getHeight()*.4); //Left Snowman
@@ -39,12 +38,15 @@ public class Grass extends GCompound implements Nighttimeable
 		snowmen[2] = new Snowman(HouseApp.APP_SIZE.getWidth()*.8,HouseApp.APP_SIZE.getHeight()*.4); //Right Snowman
 		for(Snowman s: snowmen)
 			add(s);
+		
+		planeTakeOffAnimation(); //Starts plane take off animation
+		daytime(); //init compound
 	}
 
 	/**
 	 * Sets the {@link planeTakeOff} object invisible after 2.5 seconds.
 	 */
-	public void takeOffPlane()
+	public void planeTakeOffAnimation()
 	{
 		new Timer().schedule(new TimerTask()
 		{

@@ -49,10 +49,6 @@ public class HouseApp extends GraphicsProgram
 		}
 	}
 	
-	/* 
-	 * Creates Scene using {LINK CLASSES HERE}
-	 * @see acm.program.GraphicsProgram#init()
-	 */
 	@Override
 	public void init()
 	{
@@ -63,7 +59,6 @@ public class HouseApp extends GraphicsProgram
 	public void run()
 	{
 		setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
-		((Grass)objects[1]).takeOffPlane();
 	}
 	
 	@Override

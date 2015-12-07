@@ -9,18 +9,25 @@ import acm.graphics.GImage;
 @SuppressWarnings("serial")
 public class FlyingObject extends GCompound implements Nighttimeable
 {
-	private GImage airplane = new GImage("airplaneFlying.png"), santa = new GImage("santaFlying.gif");
+	private GImage airplane = new GImage("airplaneFlying.png"), santa = new GImage("santaFlying.png");
 	
 	public FlyingObject()
 	{
 		//Construct GCompound
 		add(airplane);
 		add(santa);
-		santa.setVisible(false);
+		createAnimationThread();
 		
+		daytime(); //init compound
+	}
+	
+	/**
+	 * Creates a new {@link Timer} with a {@link TimerTask} that plays the object's animation.
+	 */
+	private void createAnimationThread()
+	{
 		GCompound temp = this;
 		
-		//Set Animation on separate Thread
 		new Timer().scheduleAtFixedRate(new TimerTask()
 		{
 			@Override
