@@ -4,6 +4,11 @@ import java.awt.Color;
 import acm.graphics.GCompound;
 import acm.graphics.GRect;
 
+/**
+ * This class creates the sky and the objects placed in it.
+ * It is based on {@link GCompound}.
+ * @author Ozaner Hansha
+ */
 @SuppressWarnings("serial")
 public class Sky extends GCompound implements Nighttimeable
 {
@@ -11,6 +16,9 @@ public class Sky extends GCompound implements Nighttimeable
 	private FlyingObject flyingObj;
 	private Moon moon;
 	
+	/**
+	 * Creates the a blue rectangle, a {@link Moon}, and a {@link FlyingObject}.
+	 */
 	public Sky()
 	{
 		//Sky
@@ -29,6 +37,9 @@ public class Sky extends GCompound implements Nighttimeable
 		daytime(); //init compound
 	}
 
+	/* Sets the sky black, and the flying object and moon to nighttime.
+	 * @see unit4.graphicsProgram.Nighttimeable#nighttime()
+	 */
 	@Override
 	public void nighttime()
 	{
@@ -37,6 +48,9 @@ public class Sky extends GCompound implements Nighttimeable
 		moon.setLight(false);
 	}
 
+	/* Sets the sky cyan, and the flying object and moon to daytime.
+	 * @see unit4.graphicsProgram.Nighttimeable#daytime()
+	 */
 	@Override
 	public void daytime()
 	{

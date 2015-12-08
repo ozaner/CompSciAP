@@ -5,6 +5,10 @@ import acm.graphics.GCompound;
 import acm.graphics.GPolygon;
 import acm.graphics.GRect;
 
+/**
+ * This class creates house objects based on {@link GCompound}.
+ * @author Ozaner Hansha
+ */
 @SuppressWarnings("serial")
 public class House extends GCompound implements Nighttimeable
 {
@@ -12,6 +16,11 @@ public class House extends GCompound implements Nighttimeable
 	private GRect body, door, garage, driveway;
 	private GRect[] windows = new GRect[3];
 	
+	/**
+	 * Creates a house with a red roof, magenta body, white windows, gray garage, and black driveway.
+	 * @param x - The x coordinate of the top left of the house's base.
+	 * @param y - The y coordinate of the top left of the house's base.
+	 */
 	public House(double x, double y)
 	{
 		//Roof
@@ -58,6 +67,10 @@ public class House extends GCompound implements Nighttimeable
 		daytime(); //init Compound
 	}
 
+	/* Sets the roof, door, and garage dark gray. Sets the body light gray.
+	 * Sets all the windows yellow.
+	 * @see unit4.graphicsProgram.Nighttimeable#nighttime()
+	 */
 	@Override
 	public void nighttime()
 	{
@@ -71,6 +84,10 @@ public class House extends GCompound implements Nighttimeable
 		}
 	}
 
+	/* Sets the roof red, the body magenta, the door orange,
+	 * the garage light gray, and all the windows white.
+	 * @see unit4.graphicsProgram.Nighttimeable#daytime()
+	 */
 	@Override
 	public void daytime()
 	{

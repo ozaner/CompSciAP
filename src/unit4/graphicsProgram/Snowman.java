@@ -6,6 +6,10 @@ import acm.graphics.GCompound;
 import acm.graphics.GLine;
 import acm.graphics.GOval;
 
+/**
+ * This class creates snowman objects based on {@link GCompound}.
+ * @author Ozaner Hansha
+ */
 @SuppressWarnings("serial")
 public class Snowman extends GCompound implements Nighttimeable
 {
@@ -15,7 +19,7 @@ public class Snowman extends GCompound implements Nighttimeable
 	private GLine armLeft = new GLine(0,0,0,0), armRight = new GLine(0,0,0,0);
 	
 	/**
-	 * Constructs a snowman with 3 white ovals, and black facial features.
+	 * Constructs a snowman with 3 white ovals, an orange nose, a black mouth, and 2 brown arms.
 	 */
 	public Snowman(double x, double y)
 	{

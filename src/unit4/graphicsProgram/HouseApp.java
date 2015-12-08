@@ -7,7 +7,8 @@ import acm.graphics.GCompound;
 import acm.program.GraphicsProgram;
 
 /**
- * This is the Main Class of the Graphics Program Project.
+ * This is the Main Class of the Graphics Program Project.<br>
+ * This program creates a scene that changes when it is clicked.<br><br>
  * 
  * AP Computer Science - Pd. 7<br>
  * December 3rd, 2015<br>
@@ -20,7 +21,7 @@ public class HouseApp extends GraphicsProgram
 	/**
 	 * The width and height of the application.
 	 */
-	public static final Dimension APP_SIZE = new Dimension(700,450);
+	public static final Dimension APP_SIZE = new Dimension(700,560);
 	
 	/**
 	 * Whether or not the program is displaying daytime. If false then it is nighttime.
@@ -49,18 +50,27 @@ public class HouseApp extends GraphicsProgram
 		}
 	}
 	
+	/* Adds Mouse Listener
+	 * @see acm.program.GraphicsProgram#init()
+	 */
 	@Override
 	public void init()
 	{
 		addMouseListeners();
 	}
 	
+	/* Sets size of window.
+	 * @see acm.program.GraphicsProgram#run()
+	 */
 	@Override
 	public void run()
 	{
-		setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
+		//setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
 	}
 	
+	/* Switches light status of all objects.
+	 * @see acm.program.Program#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{

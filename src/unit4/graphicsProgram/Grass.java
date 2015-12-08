@@ -8,6 +8,11 @@ import acm.graphics.GCompound;
 import acm.graphics.GImage;
 import acm.graphics.GRect;
 
+/**
+ * This class creates the grass and the objects placed on it.
+ * It is based on {@link GCompound}.
+ * @author Ozaner Hansha
+ */
 @SuppressWarnings("serial")
 public class Grass extends GCompound implements Nighttimeable
 {	
@@ -16,6 +21,9 @@ public class Grass extends GCompound implements Nighttimeable
 	private House house;
 	private GImage planeTakeOff;
 	
+	/**
+	 * Creates a green rectangle, a {@link House}, 3 {@link Snowman}, and a gif of a plane taking off.
+	 */
 	public Grass()
 	{
 		//Grass Background
@@ -59,6 +67,9 @@ public class Grass extends GCompound implements Nighttimeable
 		}, 2500);
 	}
 	
+	/* Sets the grass gray, and the house and snowman to nighttime.
+	 * @see unit4.graphicsProgram.Nighttimeable#nighttime()
+	 */
 	@Override
 	public void nighttime()
 	{
@@ -68,6 +79,9 @@ public class Grass extends GCompound implements Nighttimeable
 			s.nighttime();
 	}
 
+	/* Sets the grass green, and the house and snowman to daytime.
+	 * @see unit4.graphicsProgram.Nighttimeable#daytime()
+	 */
 	@Override
 	public void daytime()
 	{

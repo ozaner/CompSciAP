@@ -9,8 +9,11 @@ import acm.graphics.GImage;
 @SuppressWarnings("serial")
 public class FlyingObject extends GCompound implements Nighttimeable
 {
-	private GImage airplane = new GImage("airplaneFlying.png"), santa = new GImage("santaFlying.png");
+	private GImage airplane = new GImage("airplaneFlying.png"), santa = new GImage("santaFlying.gif");
 	
+	/**
+	 * Creates 2 images, and sets them to move across the screen.
+	 */
 	public FlyingObject()
 	{
 		//Construct GCompound
@@ -46,6 +49,9 @@ public class FlyingObject extends GCompound implements Nighttimeable
 		setLocation(HouseApp.APP_SIZE.getWidth(),0);
 	}
 	
+	/* Sets the airplane invisible and santa visible.
+	 * @see unit4.graphicsProgram.Nighttimeable#nighttime()
+	 */
 	@Override
 	public void nighttime()
 	{
@@ -53,6 +59,9 @@ public class FlyingObject extends GCompound implements Nighttimeable
 		santa.setVisible(true);
 	}
 
+	/* Sets the airplane visible and santa invisible.
+	 * @see unit4.graphicsProgram.Nighttimeable#daytime()
+	 */
 	@Override
 	public void daytime()
 	{
