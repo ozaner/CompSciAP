@@ -65,7 +65,7 @@ public class HouseApp extends GraphicsProgram
 	@Override
 	public void run()
 	{
-		//setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
+		setSize((int)APP_SIZE.getWidth(),(int)APP_SIZE.getHeight());
 	}
 	
 	/* Switches light status of all objects.
