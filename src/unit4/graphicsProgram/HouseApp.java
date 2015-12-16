@@ -21,7 +21,7 @@ public class HouseApp extends GraphicsProgram
 	/**
 	 * The width and height of the application.
 	 */
-	public static final Dimension APP_SIZE = new Dimension(700,560);
+	public static final Dimension APP_SIZE = new Dimension(700,460);
 	
 	/**
 	 * Whether or not the program is displaying daytime. If false then it is nighttime.
