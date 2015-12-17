@@ -5,8 +5,9 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class Hand extends ArrayList<Card>
 {	
-	public Hand()
+	public Hand(Card... cards)
 	{
-		// complete
+		for(Card c: cards)
+			add(c);
 	}
 }

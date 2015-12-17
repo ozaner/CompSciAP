@@ -1,17 +1,25 @@
 package unit5.cardGame;
 
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+
 import acm.program.GraphicsProgram;
 
 @SuppressWarnings("serial")
-public class CardApp extends GraphicsProgram {
+public class CardApp extends GraphicsProgram
+{
+	private static final Dimension INITIAL_DIM = new Dimension(700,400);
+	private static Deck deck;
 	
-	private static final int INITIAL_WIDTH = 700;
-	private static final int INITIAL_HEIGHT = 400;
+	private static final double APP_WIDTH_3X = INITIAL_DIM.getWidth()*.3;
+	private static final double APP_WIDTH_6X = INITIAL_DIM.getWidth()*.6;
+	private static final double APP_HEIGHT_5X = INITIAL_DIM.getHeight()*.5;
+	private static final double CARD_HEIGHT = GCard.cardHeight();
 	
 	// complete
 	
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		new CardApp().start(args);
 	}
 
@@ -19,10 +27,16 @@ public class CardApp extends GraphicsProgram {
 	 * Make a deck of cards and place them face down on the canvas (in a pile) slightly left of center.
 	 */
 	@Override
-	public void init() {
-		setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+	public void init()
+	{
+		setSize(INITIAL_DIM);
+		addMouseListeners();
 		
-		// complete
+		deck = GCard.makeDeck();
+		System.out.println(deck);
+		
+		for(int i = deck.size(); i > 0; i--)
+			add((GCard)deck.deal(), APP_WIDTH_3X, APP_HEIGHT_5X - CARD_HEIGHT);
 	}
 	
 	/**
@@ -33,7 +47,11 @@ public class CardApp extends GraphicsProgram {
 	 * Ignore any other mouse clicks that are not over the deck or the discard pile.
 	 */
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// complete
+	public void mouseClicked(MouseEvent e)
+	{
+		GCard temp = (GCard)getElementAt(e.getX(),e.getY());
+		temp.turnFaceUp();
+		temp.setLocation(APP_WIDTH_6X, APP_HEIGHT_5X - CARD_HEIGHT);
+		System.out.println(x);
 	}
 }

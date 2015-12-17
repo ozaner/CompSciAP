@@ -1,5 +1,7 @@
 package unit5.cardGame;
 
+import java.util.ArrayList;
+
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
 
@@ -12,27 +14,52 @@ import acm.graphics.GImage;
 @SuppressWarnings("serial")
 public class GCard extends GCompound implements Card
 {	
+	/**
+	 * Rank of the card. Initialized in constructor.
+	 */
 	private Rank rank;
+	
+	/**
+	 * Suit of the card. Initialized in constructor.
+	 */
 	private Suit suit;
+	
+	/**
+	 * Flip status. Default to face down.
+	 */
 	private boolean faceUp;
+	
+	/**
+	 * Image on front of card. Initialized in constructor.
+	 */
 	private GImage faceUpImage;
+	
+	/**
+	 * Face down image of all cards.
+	 */
 	private static final GImage FACE_DOWN_IMAGE = new GImage("back-blue-75-1.png");
 	
 	/**
 	 * Create a playing card with a given rank and suit.
-	 * @param rank    the rank
-	 * @param suit    the suit
+	 * @param rank - the rank
+	 * @param suit - the suit
 	 */
 	public GCard(Rank rank, Suit suit)
 	{
 		this.rank = rank;
 		this.suit = suit;
+		faceUpImage = new GImage(String.format("%s-%s-75.png", suit.toString(), rank.toString()));
+		
+		add(FACE_DOWN_IMAGE); //This is below
+		add(faceUpImage); //This is on top.
+		turnFaceDown(); //Starts face down.
 	}
 	
 	/**
 	 * Get the rank of the card.
-	 * @return   the rank
+	 * @return the rank
 	 */
+	@Override
 	public Rank getRank()
 	{
 		return rank;
@@ -40,8 +67,9 @@ public class GCard extends GCompound implements Card
 	
 	/**
 	 * Get the suit of the card.
-	 * @return   the suit
+	 * @return the suit
 	 */
+	@Override
 	public Suit getSuit()
 	{
 		return suit;
@@ -49,17 +77,19 @@ public class GCard extends GCompound implements Card
 	
 	/**
 	 * A card as a string.
-	 * @return  the card as a string
+	 * @return the card as a string
 	 */
+	@Override
 	public String toString()
 	{
-		return String.format("Rank: %s, Suit: %s", getRank(),getSuit());
+		return String.format("Rank: %s, Suit: %s", getRank(), getSuit());
 	}
 	
 	/**
 	 * Is the card face up?
-	 * @return  true if the card is face up
+	 * @return true if the card is face up
 	 */
+	@Override
 	public boolean isFaceUp()
 	{
 		return faceUp;
@@ -69,9 +99,11 @@ public class GCard extends GCompound implements Card
 	 * Turn the card face up.
 	 * @return the card
 	 */
+	@Override
 	public GCard turnFaceUp()
 	{
 		faceUp = true;
+		faceUpImage.setVisible(true);
 		return this;
 	}
 	
@@ -79,9 +111,11 @@ public class GCard extends GCompound implements Card
 	 * Turn the card face down.
 	 * @return the card
 	 */
+	@Override
 	public GCard turnFaceDown()
 	{
 		faceUp = true;
+		faceUpImage.setVisible(false);
 		return this;
 	}
 	
@@ -89,24 +123,35 @@ public class GCard extends GCompound implements Card
 	 * Flip the card over.
 	 * @return the card
 	 */
+	@Override
 	public GCard flipOver()
 	{
 		faceUp = !faceUp;
+		faceUpImage.setVisible(faceUp);
 		return this;
 	}
 	
 	/**
 	 * Convenience method for making a deck of GCards.
-	 * @return        the new deck
+	 * @return the new deck
 	 */
 	public static Deck makeDeck()
 	{
-		return new Deck();
+		ArrayList<Card> cards = new ArrayList<Card>();
+		for(Suit s: Suit.values())
+		{
+			for(Rank r: Rank.values())
+			{
+				cards.add(new GCard(r,s));
+			}
+		}
+		Card[] temp = new Card[52];
+		return new Deck(cards.toArray(temp));
 	}
 	
 	/**
 	 * Get the width for any playing card.
-	 * @return  the width
+	 * @return the width
 	 */
 	public static double cardWidth()
 	{
@@ -115,7 +160,7 @@ public class GCard extends GCompound implements Card
 	
 	/**
 	 * Get the height for any playing card.
-	 * @return  the height
+	 * @return the height
 	 */
 	public static double cardHeight()
 	{

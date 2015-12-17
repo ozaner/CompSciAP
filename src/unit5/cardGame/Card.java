@@ -3,9 +3,9 @@ package unit5.cardGame;
 /**
  * Standard requirements for implementations of playing cards.
  * @author markjones
- *
  */
-public interface Card {
+public interface Card
+{
 	/** 
 	 * Get the rank of the card.
 	 * @return   the rank
