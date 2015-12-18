@@ -12,17 +12,14 @@ public enum Months
 		daysInMonth = days;
 	}
 	
+	public int getDays()
+	{
+		return daysInMonth;
+	}
+	
 	@Override
 	public String toString()
 	{
 		return name().toUpperCase().substring(0,1) + name().toLowerCase().substring(1);
-	}
-	
-	public static void main(String[] args)
-	{
-		for(Months d: Months.values())
-		{
-			System.out.printf("Day of the Week is %s\n", d);
-		}
 	}
 }
