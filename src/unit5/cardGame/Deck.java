@@ -11,7 +11,7 @@ import java.util.Collections;
 public class Deck extends ArrayList<Card>
 {	
 	/**
-	 * Make a new deck of 52 cards.
+	 * Make a new deck of an arbitrary amount cards.
 	 */
 	public Deck(Card... cards)
 	{
