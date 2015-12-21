@@ -25,6 +25,8 @@ public class CardApp extends GraphicsProgram
 	private static final double APP_HEIGHT_5X = INITIAL_DIM.getHeight()*.5;
 	private static final double CARD_HEIGHT = GCard.cardHeight();
 	
+	private static int DECK_HEIGHT;
+	
 	/**
 	 * Starts the CardApp.
 	 * @param args - Not expecting any command arguments.
@@ -44,9 +46,13 @@ public class CardApp extends GraphicsProgram
 		addMouseListeners();
 		Deck deck = GCard.makeDeck();
 		
+		DECK_HEIGHT = deck.size();
 		//Deals every card onto a spot (the deck) on the canvas.
 		for(int i = deck.size(); i > 0; i--)
-			add((GCard)deck.deal(), APP_WIDTH_3X, APP_HEIGHT_5X - CARD_HEIGHT);
+		{
+			add((GCard)deck.deal(), APP_WIDTH_3X + DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
+			DECK_HEIGHT++;
+		}
 	}
 	
 	/**
@@ -64,14 +70,16 @@ public class CardApp extends GraphicsProgram
 			if(obj.isFaceUp()) //Checks to see if card was part of the discard pile
 			{
 				obj.turnFaceDown();
-				obj.setLocation(APP_WIDTH_3X, APP_HEIGHT_5X - CARD_HEIGHT);
+				obj.setLocation(APP_WIDTH_3X - DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
 				obj.sendToFront();
+				DECK_HEIGHT++;
 			}
 			else //GCard must be part of deck
 			{
 				obj.turnFaceUp();
-				obj.setLocation(APP_WIDTH_6X, APP_HEIGHT_5X - CARD_HEIGHT);
+				obj.setLocation(APP_WIDTH_6X - DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
 				obj.sendToFront();
+				DECK_HEIGHT--;
 			}
 	}
 }
