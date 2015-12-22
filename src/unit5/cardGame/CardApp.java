@@ -1,8 +1,9 @@
 package unit5.cardGame;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
-import acm.graphics.GPoint;
+import acm.graphics.GLabel;
 import acm.program.GraphicsProgram;
 
 /**
@@ -23,10 +24,24 @@ public class CardApp extends GraphicsProgram
 	private static final double APP_WIDTH_3X = INITIAL_DIM.getWidth()*.3;
 	private static final double APP_WIDTH_6X = INITIAL_DIM.getWidth()*.6;
 	private static final double CARD_Y = INITIAL_DIM.getHeight()*.5 - GCard.cardHeight();
-	private static final double CARD_SPACE_FACTOR = 1;
 	
-	private static Deck deck;
+	//Deck variables
+	private static Deck deck = GCard.makeDeck();
 	private static int DECK_HEIGHT; //Keeps track of height of deck on canvas.
+	
+	//Deck Counter Variables
+	private static final String DECK_COUNT_LABEL_STRING = "#Cards in Deck: ";
+	private static GLabel DECK_COUNT_LABEL = new GLabel(DECK_COUNT_LABEL_STRING + deck.size());
+	private static final double DECK_COUNTER_X = INITIAL_DIM.getWidth()*.3;
+	private static final double DECK_COUNTER_Y = INITIAL_DIM.getHeight()*.6;
+	
+	//Pile Counter Variables
+	private static final String PILE_COUNT_LABEL_STRING = "#Cards in Pile: ";
+	private static GLabel PILE_COUNT_LABEL = new GLabel(PILE_COUNT_LABEL_STRING + 0);
+	private static final double PILE_COUNTER_X = INITIAL_DIM.getWidth()*.55;
+	private static final double PILE_COUNTER_Y = INITIAL_DIM.getHeight()*.15;
+	
+	private static final Font COUNTER_FONT = new Font("Ariel", 0, 15);
 	
 	/**
 	 * Starts the CardApp.
@@ -45,16 +60,18 @@ public class CardApp extends GraphicsProgram
 	{
 		setSize(INITIAL_DIM);
 		addMouseListeners();
-		
-		deck = GCard.makeDeck(); //Makes the 52 card deck
 		deck.shuffle(); //Shuffles the deck
-
+		
 		//Adds all cards in deck to canvas.
 		for(Card c: deck)
 		{
-			add((GCard)c, APP_WIDTH_3X + DECK_HEIGHT*CARD_SPACE_FACTOR, CARD_Y - DECK_HEIGHT*CARD_SPACE_FACTOR);
+			add((GCard)c, APP_WIDTH_3X + DECK_HEIGHT, CARD_Y - DECK_HEIGHT);
 			DECK_HEIGHT++;
 		}
+		DECK_COUNT_LABEL.setFont(COUNTER_FONT);
+		PILE_COUNT_LABEL.setFont(COUNTER_FONT);
+		add(DECK_COUNT_LABEL,DECK_COUNTER_X,DECK_COUNTER_Y); //Adds deck counter to canvas
+		add(PILE_COUNT_LABEL,PILE_COUNTER_X,PILE_COUNTER_Y); //Adds pile counter to canvas
 	}
 	
 	/**
@@ -66,29 +83,27 @@ public class CardApp extends GraphicsProgram
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e)
-	{
-		double cardSpace = DECK_HEIGHT*CARD_SPACE_FACTOR;
-		GPoint pilePoint = new GPoint(APP_WIDTH_6X - cardSpace, CARD_Y + cardSpace);
-		GPoint deckPoint = new GPoint(APP_WIDTH_3X + cardSpace, CARD_Y - cardSpace);
-	
+	{	
 		//Sets obj equal to the top card in the deck/pile
 		GCard obj = (GCard)getElementAt(e.getX(),e.getY());
 		if(obj != null) //Checks to see if a card was clicked.
 		{
-			if(obj.getX() < INITIAL_DIM.getWidth()*.5) //If this card is on the deck.
+			if(DECK_HEIGHT > deck.indexOf(obj)) //If this card is on the deck.
 			{
 				obj = (GCard)deck.get(DECK_HEIGHT-1); //The top card of the deck
-				obj.setLocation(pilePoint);
+				obj.setLocation(APP_WIDTH_6X - DECK_HEIGHT, CARD_Y + DECK_HEIGHT); //Right side of screen.
 				DECK_HEIGHT--;
 			}
 			else //Card must be on pile
 			{
 				obj = (GCard)deck.get(DECK_HEIGHT); //The top card of the pile
-				obj.setLocation(deckPoint);
+				obj.setLocation(APP_WIDTH_3X + DECK_HEIGHT, CARD_Y - DECK_HEIGHT); //Left side of screen.
 				DECK_HEIGHT++;
 			}
 			obj.flipOver();
 			obj.sendToFront();
+			DECK_COUNT_LABEL.setLabel(DECK_COUNT_LABEL_STRING + DECK_HEIGHT);
+			PILE_COUNT_LABEL.setLabel(PILE_COUNT_LABEL_STRING + (deck.size() - DECK_HEIGHT));
 		}
 	}
 }
