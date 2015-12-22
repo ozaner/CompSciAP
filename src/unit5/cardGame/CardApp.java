@@ -2,7 +2,7 @@ package unit5.cardGame;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-
+import acm.graphics.GPoint;
 import acm.program.GraphicsProgram;
 
 /**
@@ -22,10 +22,11 @@ public class CardApp extends GraphicsProgram
 	private static final Dimension INITIAL_DIM = new Dimension(700,400);
 	private static final double APP_WIDTH_3X = INITIAL_DIM.getWidth()*.3;
 	private static final double APP_WIDTH_6X = INITIAL_DIM.getWidth()*.6;
-	private static final double APP_HEIGHT_5X = INITIAL_DIM.getHeight()*.5;
-	private static final double CARD_HEIGHT = GCard.cardHeight();
+	private static final double CARD_Y = INITIAL_DIM.getHeight()*.5 - GCard.cardHeight();
+	private static final double CARD_SPACE_FACTOR = 1;
 	
-	private static int DECK_HEIGHT;
+	private static Deck deck;
+	private static int DECK_HEIGHT; //Keeps track of height of deck on canvas.
 	
 	/**
 	 * Starts the CardApp.
@@ -44,13 +45,14 @@ public class CardApp extends GraphicsProgram
 	{
 		setSize(INITIAL_DIM);
 		addMouseListeners();
-		Deck deck = GCard.makeDeck();
 		
-		DECK_HEIGHT = deck.size();
-		//Deals every card onto a spot (the deck) on the canvas.
-		for(int i = deck.size(); i > 0; i--)
+		deck = GCard.makeDeck(); //Makes the 52 card deck
+		deck.shuffle(); //Shuffles the deck
+
+		//Adds all cards in deck to canvas.
+		for(Card c: deck)
 		{
-			add((GCard)deck.deal(), APP_WIDTH_3X + DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
+			add((GCard)c, APP_WIDTH_3X + DECK_HEIGHT*CARD_SPACE_FACTOR, CARD_Y - DECK_HEIGHT*CARD_SPACE_FACTOR);
 			DECK_HEIGHT++;
 		}
 	}
@@ -65,21 +67,28 @@ public class CardApp extends GraphicsProgram
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		GCard obj = (GCard)getElementAt(e.getX(),e.getY()); //Can cast to GCard immediately because all objects on canvas are GCards.
-		if(obj != null) //Checks to see if an object was clicked on.
-			if(obj.isFaceUp()) //Checks to see if card was part of the discard pile
+		double cardSpace = DECK_HEIGHT*CARD_SPACE_FACTOR;
+		GPoint pilePoint = new GPoint(APP_WIDTH_6X - cardSpace, CARD_Y + cardSpace);
+		GPoint deckPoint = new GPoint(APP_WIDTH_3X + cardSpace, CARD_Y - cardSpace);
+	
+		//Sets obj equal to the top card in the deck/pile
+		GCard obj = (GCard)getElementAt(e.getX(),e.getY());
+		if(obj != null) //Checks to see if a card was clicked.
+		{
+			if(obj.getX() < INITIAL_DIM.getWidth()*.5) //If this card is on the deck.
 			{
-				obj.turnFaceDown();
-				obj.setLocation(APP_WIDTH_3X - DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
-				obj.sendToFront();
-				DECK_HEIGHT++;
-			}
-			else //GCard must be part of deck
-			{
-				obj.turnFaceUp();
-				obj.setLocation(APP_WIDTH_6X - DECK_HEIGHT, APP_HEIGHT_5X - CARD_HEIGHT);
-				obj.sendToFront();
+				obj = (GCard)deck.get(DECK_HEIGHT-1); //The top card of the deck
+				obj.setLocation(pilePoint);
 				DECK_HEIGHT--;
 			}
+			else //Card must be on pile
+			{
+				obj = (GCard)deck.get(DECK_HEIGHT); //The top card of the pile
+				obj.setLocation(deckPoint);
+				DECK_HEIGHT++;
+			}
+			obj.flipOver();
+			obj.sendToFront();
+		}
 	}
 }

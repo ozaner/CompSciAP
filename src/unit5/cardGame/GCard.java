@@ -1,10 +1,5 @@
 package unit5.cardGame;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import acm.graphics.GCompound;
 import acm.graphics.GImage;
 
@@ -28,11 +23,6 @@ public class GCard extends GCompound implements Card
 	private Suit suit;
 	
 	/**
-	 * Flip status. Default to face down.
-	 */
-	public boolean faceUp;
-	
-	/**
 	 * Image on front of card. Initialized in constructor.
 	 */
 	public GImage faceUpImage;
@@ -53,7 +43,7 @@ public class GCard extends GCompound implements Card
 		this.suit = suit;
 		faceUpImage = new GImage(String.format("%s-%s-75.png", suit.toString(), rank.toString()));
 		
-		add(FACE_DOWN_IMAGE); //This is below.
+		add(new GImage(FACE_DOWN_IMAGE.getImage())); //This is below.
 		add(faceUpImage); //This is on top.
 		turnFaceDown(); //Starts face down.
 	}
@@ -95,7 +85,7 @@ public class GCard extends GCompound implements Card
 	@Override
 	public boolean isFaceUp()
 	{
-		return faceUp;
+		return faceUpImage.isVisible();
 	}
 	
 	/**
@@ -105,7 +95,6 @@ public class GCard extends GCompound implements Card
 	@Override
 	public GCard turnFaceUp()
 	{
-		faceUp = true;
 		faceUpImage.setVisible(true);
 		return this;
 	}
@@ -117,7 +106,6 @@ public class GCard extends GCompound implements Card
 	@Override
 	public GCard turnFaceDown()
 	{
-		faceUp = false;
 		faceUpImage.setVisible(false);
 		return this;
 	}
@@ -129,8 +117,7 @@ public class GCard extends GCompound implements Card
 	@Override
 	public GCard flipOver()
 	{
-		faceUp = !faceUp;
-		faceUpImage.setVisible(faceUp);
+		faceUpImage.setVisible(!faceUpImage.isVisible());
 		return this;
 	}
 	
@@ -140,22 +127,17 @@ public class GCard extends GCompound implements Card
 	 */
 	public static Deck makeDeck()
 	{
-		ArrayList<Card> cards = new ArrayList<Card>();
-		List<Suit> randomSuit = Arrays.asList(Suit.values());
-		Collections.shuffle(randomSuit);
-		
-		List<Rank> randomRank = Arrays.asList(Rank.values());
-		Collections.shuffle(randomRank);
-		
-		for(Suit s: randomSuit)
+		Card[] cards = new Card[52];
+		int i = 0;
+		for(Suit s: Suit.values())
 		{
-			for(Rank r: randomRank)
+			for(Rank r: Rank.values())
 			{
-				cards.add(new GCard(r,s));
+				cards[i] = new GCard(r,s);
+				i++;
 			}
 		}
-		Card[] temp = new Card[52];
-		return new Deck(cards.toArray(temp));
+		return new Deck(cards);
 	}
 	
 	/**
@@ -178,7 +160,7 @@ public class GCard extends GCompound implements Card
 	
 	/**
 	 * Get the back image for any playing card.
-	 * @return  the back image
+	 * @return the back image
 	 */
 	public static GImage getBackImage()
 	{
