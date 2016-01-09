@@ -1,24 +1,27 @@
 package unit6.logoProject;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-
+import java.util.HashMap;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-
-import acm.program.*; 
+import acm.program.GraphicsProgram; 
 
 /**
  * Demonstrates animation and Swing interactors such as JButtons, JSliders 
- * and JRadioButtons.
+ * and JRadioButtons.<br><br>
  * 
+ * Ozaner Hansha<br>
+ * AP Computer Science<br>
  * @author Dr. Mark Jones
+ * January 11th, 2016
  */
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked", "rawtypes"})
 public class LogoRunner extends GraphicsProgram {
 	
 	// application constants
@@ -35,7 +38,6 @@ public class LogoRunner extends GraphicsProgram {
 	private static final double SLOW_SPEED = 1;
 	private static final double MEDIUM_SPEED = 2;
 	private static final double FAST_SPEED = 5;
-	private static int currentSpeed = 1; //0 = slow, 1 = normal, 2 & up = fast.
 	
 	// instance variables
 	private GTargetLogo logo;  /* the logo object */
@@ -43,10 +45,24 @@ public class LogoRunner extends GraphicsProgram {
 	private double dy;         /* velocity delta in the y direction */
 	private boolean suspend;   /* whether to suspend the animation */
 	
+	//A map of the name of colors and the actual colors.
+	private static HashMap<String, Color> colors = new HashMap<String, Color>();
+	static
+	{
+		colors.put("Red", Color.RED);
+		colors.put("Blue", Color.BLUE);
+		colors.put("Cyan", Color.CYAN);
+		colors.put("Gray", Color.GRAY);
+		colors.put("Green", Color.GREEN);
+		colors.put("Magenta", Color.MAGENTA);
+		colors.put("Yellow", Color.YELLOW);
+	}
+	
 	//Swing objects.
-	private static JButton reset = new JButton("Reset");
-	private static JSlider size = new JSlider();
-	private static JRadioButton[] speeds = {new JRadioButton("Slow"),
+	private JButton reset = new JButton("Reset");
+	private JSlider size = new JSlider(MIN_PERCENTAGE,MAX_PERCENTAGE,DEFAULT_PERCENTAGE);
+	private JComboBox colorBox = new JComboBox(colors.keySet().toArray());
+	private JRadioButton[] speeds = {new JRadioButton("Slow"),
 									new JRadioButton("Medium"),
 									new JRadioButton("Fast")};
 	private ButtonGroup speedGroup = new ButtonGroup();
@@ -76,7 +92,13 @@ public class LogoRunner extends GraphicsProgram {
 		{
 			speedGroup.add(b);
 			add(b, SOUTH);
+			b.addActionListener(this);
 		}
+		speeds[1].setSelected(true);
+		
+		//JComboBox for color changing.
+		add(colorBox, SOUTH);
+		colorBox.addActionListener(this);
 		
 		addActionListeners();
 		addMouseListeners();
@@ -88,21 +110,19 @@ public class LogoRunner extends GraphicsProgram {
 	 * A mouse click suspends/resumes the animation.
 	 * @param e  a mouse event
 	 */
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e){
 		suspend = !suspend;
 	}
 	
 	/**
 	 * ActionEvent handler for button presses, etc.
 	 */
-	public void actionPerformed(ActionEvent e)
-	{
-		switch(e.getActionCommand())
-		{
+	public void actionPerformed(ActionEvent e){
+		switch(e.getActionCommand()){
+		case "comboBoxChanged":
+			logo.setColor(colors.get(((JComboBox)e.getSource()).getSelectedItem()));
+			break;
 		case "Reset": reset();
-		case "Slow": currentSpeed = 0;
-		case "Medium": currentSpeed = 1;
-		case "Fast": currentSpeed = 2;
 		}
 	}
 	
@@ -117,6 +137,7 @@ public class LogoRunner extends GraphicsProgram {
 		add(logo);
 		dx = 2; dy = 1;
 		suspend = false;
+		colorBox.setSelectedIndex(0);
 	}
 	
 	/** Simple animation method that shifts an object. */
@@ -142,21 +163,17 @@ public class LogoRunner extends GraphicsProgram {
 	 * Computes the current percentage of the window size to use for the logo size.
 	 * @return  the percentage
 	 */
-	public double getCurrentPercentage() {
-		// replace the line below with correct code
-		return DEFAULT_PERCENTAGE / 100.;
+	public double getCurrentPercentage(){
+		return size.getValue() / 100.;
 	}
 	
 	/**
 	 * Computes the current speed factor for the animation.
 	 * @return
 	 */
-	private double getCurrentSpeed() {
-		switch(currentSpeed)
-		{
-		case 0: return SLOW_SPEED;
-		case 1: return MEDIUM_SPEED;
-		}
-		return FAST_SPEED;
+	private double getCurrentSpeed(){
+		if(speeds[0].isSelected()) return SLOW_SPEED;
+		if(speeds[2].isSelected()) return FAST_SPEED;
+		return MEDIUM_SPEED;
 	}
 } 

@@ -13,6 +13,9 @@ import acm.graphics.*;
 public class GTargetLogo extends GCompound {
 
 	private double size;
+	
+	private GOval outerCircle, middleCircle, innerCircle;
+	
 	/**
 	 * Makes a target logo object of a given size.
 	 *  @param size		size of the logo
@@ -21,27 +24,27 @@ public class GTargetLogo extends GCompound {
 		this.size = size;
 		
 		double outerRedCircleSize = size;
-		GOval outerRedCircle = new GOval(outerRedCircleSize, outerRedCircleSize);
-		outerRedCircle.setFilled(true);
-		outerRedCircle.setFillColor(Color.RED);
-		outerRedCircle.setLocation(-outerRedCircleSize / 2, -outerRedCircleSize / 2);  
-		add(outerRedCircle);
+		outerCircle = new GOval(outerRedCircleSize, outerRedCircleSize);
+		outerCircle.setFilled(true);
+		outerCircle.setFillColor(Color.RED);
+		outerCircle.setLocation(-outerRedCircleSize / 2, -outerRedCircleSize / 2);  
+		add(outerCircle);
 		
 		// make inner white circle
 		double whiteCircleSize = 2./3.*size;	
-		GOval whiteCircle = new GOval(whiteCircleSize, whiteCircleSize);
-		whiteCircle.setFilled(true);
-		whiteCircle.setFillColor(Color.WHITE);
-		whiteCircle.setLocation(-whiteCircleSize / 2, -whiteCircleSize / 2);
-		add(whiteCircle);
+		middleCircle = new GOval(whiteCircleSize, whiteCircleSize);
+		middleCircle.setFilled(true);
+		middleCircle.setFillColor(Color.WHITE);
+		middleCircle.setLocation(-whiteCircleSize / 2, -whiteCircleSize / 2);
+		add(middleCircle);
 		
 		// make small inner red circle
 		double innerRedCircleSize = 1./3.*size;		
-		GOval innerRedCircle = new GOval(innerRedCircleSize, innerRedCircleSize);
-		innerRedCircle.setFilled(true);
-		innerRedCircle.setFillColor(Color.RED);
-		innerRedCircle.setLocation(-innerRedCircleSize / 2, -innerRedCircleSize / 2);
-		add(innerRedCircle);
+		innerCircle = new GOval(innerRedCircleSize, innerRedCircleSize);
+		innerCircle.setFilled(true);
+		innerCircle.setFillColor(Color.RED);
+		innerCircle.setLocation(-innerRedCircleSize / 2, -innerRedCircleSize / 2);
+		add(innerCircle);
 	}
 	
 	/**
@@ -53,6 +56,15 @@ public class GTargetLogo extends GCompound {
 	public GTargetLogo(double x, double y, double size) {
 		this(size);
 		setLocation(x, y);
+	}
+	
+	/**
+	 * Sets the color of the logo's inner and outer circles.
+	 */
+	public void setColor(Color c)
+	{
+		outerCircle.setFillColor(c);
+		innerCircle.setFillColor(c);
 	}
 	
 	public String toString() {
