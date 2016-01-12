@@ -2,6 +2,7 @@ package unit6.logoProject;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import javax.swing.ButtonGroup;
@@ -92,7 +93,6 @@ public class LogoRunner extends GraphicsProgram {
 		{
 			speedGroup.add(b);
 			add(b, SOUTH);
-			b.addActionListener(this);
 		}
 		speeds[1].setSelected(true);
 		
@@ -102,8 +102,19 @@ public class LogoRunner extends GraphicsProgram {
 		
 		addActionListeners();
 		addMouseListeners();
+		addKeyListeners();
 
 		reset();
+	}
+	
+	
+	/**
+	 * A space press pauses/resmums the animation
+	 * @param e  a key event
+	 */
+	public void keyPressed(KeyEvent e){
+		if(e.getKeyCode() == e.VK_SPACE)
+			suspend = !suspend;
 	}
 	
 	/**
@@ -169,7 +180,7 @@ public class LogoRunner extends GraphicsProgram {
 	
 	/**
 	 * Computes the current speed factor for the animation.
-	 * @return
+	 * @return the speed
 	 */
 	private double getCurrentSpeed(){
 		if(speeds[0].isSelected()) return SLOW_SPEED;
