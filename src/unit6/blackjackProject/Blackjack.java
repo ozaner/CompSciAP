@@ -1,37 +1,60 @@
 package unit6.blackjackProject;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import acm.program.*;
-import acm.graphics.*;
+import acm.program.GraphicsProgram;
 
 /**
- * Blackjack game.
+ * A Blackjack game using the ACM Library.
+ * <br><br>
+ * AP Computer Science<br>
+ * 1/??/16<br>
+ * @author Ozaner Hansha
  * @author Mark Jones
+ * 
  * @version 1.0
  */
 @SuppressWarnings("serial")
 public class Blackjack extends GraphicsProgram implements BlackjackView {
 	
-	// class constants
-	private static final int INITIAL_WIDTH = 700;
-	private static final int INITIAL_HEIGHT = 300;
-	// . . .
+	/**
+	 * Initial window size.
+	 */
+	private static final Dimension INITIAL_SIZE = new Dimension(700,300);
 
-	// class variables
-	// . . .
-
-	// instance variables
+	/**
+	 * The amount of wins losses, or ties in this game.
+	 */
+	private int wins, losses, ties;
+	
+	/**
+	 * A pointer to the {@link BlackjackModel} corresponding with
+	 * this instance of {@link Backjack} for callbacks.
+	 */
 	private BlackjackModel bm;
 	
+	/**
+	 * This {@link JLabel} displays any messages sent by {@link #bm}.
+	 */
+	private JLabel notifications = new JLabel();
 	
-	// . . .
+	/**
+	 * This {@link JLabel} displays the scores of the games.
+	 * @see #updateScoreboard()
+	 */
+	private JLabel scoreboard = new JLabel();
+	
+	/**
+	 * 
+	 */
+	private JButton[] buttons = {new JButton("New Game"),
+								new JButton("Hit"),
+								new JButton("Stay")};
 
 	/**
 	 * Entry point when running Blackjack as an application.
@@ -57,9 +80,24 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 
 		bm = new BlackjackModel(this);
 
-		setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+		setSize(INITIAL_SIZE);
 		setBackground(Color.LIGHT_GRAY);
-
+		
+		notifications.setText("TEST");
+		notifications.setIcon(new ImageIcon(Blackjack.class.getResource("/unit6/blackjackProject/bjLogo.png")));
+		
+		//GUI
+		add(notifications, NORTH);
+		
+		for(JButton b: buttons)
+		{
+			add(b, SOUTH);
+		}
+		
+		add(scoreboard, SOUTH);
+		updateScoreboard();
+		
+		addActionListeners();
 	}
 
 	/**
@@ -70,12 +108,27 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		
 	}
 
+	/**
+	 * Starts a new round.
+	 */
+	public void newGame()
+	{
+		notifications.setText("Starting a New Round. (Hit or Stay?)");
+	}
+	
+	/**
+	 * Updates the scoreboard with the current wins, losses, and ties.
+	 */
+	public void updateScoreboard() {
+		scoreboard.setText(String.format("%d Wins - %d Losses - %d Ties", wins, losses, ties));
+	}
+	
 	/** 
 	 * Handler for button actions.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		System.out.println(e.getActionCommand());
 	}
 
 	/*************  Notifications  ***************/
@@ -87,7 +140,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void cardDealtToPlayerNotification(BlackjackGCard card) {
-		
+		notifications.setText(String.format("Dealer dealt a %s of %s.", card.getRank(), card.getSuit()));
 	}
 
 	/**
@@ -97,7 +150,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void cardDealtToDealerNotification(BlackjackGCard card) {
-
+		notifications.setText("Dealer dealt a card to himself");
 	}
 
 	/**
@@ -105,7 +158,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void bothBustNotification(int wins, int losses, int ties) {
-
+		notifications.setText("You and the Dealer go bust. It's a Tie!");
+		this.ties = ties;
+		updateScoreboard();
 	}
 
 	/**
@@ -113,7 +168,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void youBustDealerWinsNotification(int wins, int losses, int ties) {
-
+		notifications.setText("You went bust. You lose!");
+		this.losses = losses;
+		updateScoreboard();
 	}
 
 	/**
@@ -121,7 +178,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void dealerBustYouWinNotification(int wins, int losses, int ties) {
-
+		notifications.setText("The Dealer went bust. You win!");
+		this.wins = wins;
+		updateScoreboard();
 	}
 
 	/**
@@ -129,7 +188,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void youBeatDealerNotification(int wins, int losses, int ties) {
-
+		notifications.setText("You got 21, You win!");
+		this.wins = wins;
+		updateScoreboard();
 	}
 
 	/**
@@ -137,7 +198,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void dealerBeatsYouNotification(int wins, int losses, int ties) {
-
+		notifications.setText("Dealer got to 21, You win!");
+		this.wins = wins;
+		updateScoreboard();
 	}
 
 	/**
@@ -145,7 +208,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void bothTieNotification(int wins, int losses, int ties) {
-
+		notifications.setText("You and dealer tie!");
+		this.ties = ties;
+		updateScoreboard();
 	}
 
 	/**
@@ -153,7 +218,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void quitGameNotification(int wins, int losses, int ties) {
-
+		notifications.setText("You quit, You lose!");
+		this.losses = losses;
+		updateScoreboard();
 	}
 }
 

@@ -6,6 +6,26 @@ package unit6.blackjackProject;
 @SuppressWarnings("serial")
 public class BlackjackGCard extends GCard {
 
+	/**
+	 * The highest possible value of an ace.
+	 */
+	public static int HIGH_ACE_VALUE = 11;
+	
+	/**
+	 * The lowest possible value for an ace.
+	 */
+	public static int LOW_ACE_VALUE = 1;
+	
+	/**
+	 * The value of all face cards (jack, queen, king)
+	 */
+	public static int FACE_VALUE = 10;
+	
+	/**
+	 * Creates a new blackjack card.
+	 * @param r - The rank of the card.
+	 * @param s - The suit of the card.
+	 */
 	public BlackjackGCard(Rank r, Suit s) {
 		super(r, s);
 	}
@@ -29,8 +49,8 @@ public class BlackjackGCard extends GCard {
 	 */
 	public int value() {
 		String rank = getRank().toString();
-		if(rank.matches("10|j|q|k")) return 10;
-		else if(rank.equals("a")) return 1;
+		if(rank.matches("j|q|k")) return FACE_VALUE;
+		else if(rank.equals("a")) return LOW_ACE_VALUE;
 		else return Integer.parseInt(rank);
 	}
 }
