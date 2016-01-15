@@ -6,14 +6,25 @@ package unit6.blackjackProject;
  */
 public class BlackjackModel {
 
-	// instance variables
+	/**
+	 * The BlackjackView corresponding to this model.
+	 */
 	private BlackjackView bv;
 	
-	private Player player;
+	/**
+	 * The player object.
+	 */
+	private Player player = new Player();
 	
-	private Dealer dealer;
+	/**
+	 * The dealer object.
+	 */
+	private Dealer dealer = new Dealer();
 	
-	private boolean dealerTurn;
+	/**
+	 * The wins, losses, or ties of this game.
+	 */
+	private int wins, losses, ties;
 
 	/**
 	 * Create a BlackjackModel (given a BlackjackView for notifications).
@@ -42,25 +53,28 @@ public class BlackjackModel {
 	 */
 	public void hit()
 	{
-		dealer.dealFaceDown(player);
-		bv.cardDealtToPlayerNotification(card);
+		bv.cardDealtToPlayerNotification(dealer.dealFaceDown(player));
 	}
 	
 	/**
-	 * 
+	 * Ends the player's turn.
 	 */
 	public void stay()
 	{
-		dealerTurn = true;
+		
 	}
 	
 	/**
-	 * 
+	 * WHat the dealer does on his turn.
 	 */
 	public void dealerTurn()
 	{
-		
-	}
+		if(dealer.handValue() <= 17) return;
+		for(Card c: dealer.hand)
+		{
+			
+		}
+	}		
 	
 	/**
 	 * 

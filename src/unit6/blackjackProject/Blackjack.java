@@ -26,11 +26,6 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 * Initial window size.
 	 */
 	private static final Dimension INITIAL_SIZE = new Dimension(700,300);
-
-	/**
-	 * The amount of wins losses, or ties in this game.
-	 */
-	private int wins, losses, ties;
 	
 	/**
 	 * A pointer to the {@link BlackjackModel} corresponding with
@@ -95,7 +90,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		}
 		
 		add(scoreboard, SOUTH);
-		updateScoreboard();
+		updateScoreboard(0,0,0); //Starts scoreboard at 0
 		
 		addActionListeners();
 	}
@@ -111,15 +106,14 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	/**
 	 * Starts a new round.
 	 */
-	public void newGame()
-	{
+	public void newGame() {
 		notifications.setText("Starting a New Round. (Hit or Stay?)");
 	}
 	
 	/**
 	 * Updates the scoreboard with the current wins, losses, and ties.
 	 */
-	public void updateScoreboard() {
+	public void updateScoreboard(int wins, int losses, int ties) {
 		scoreboard.setText(String.format("%d Wins - %d Losses - %d Ties", wins, losses, ties));
 	}
 	
@@ -159,8 +153,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void bothBustNotification(int wins, int losses, int ties) {
 		notifications.setText("You and the Dealer go bust. It's a Tie!");
-		this.ties = ties;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -169,8 +162,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void youBustDealerWinsNotification(int wins, int losses, int ties) {
 		notifications.setText("You went bust. You lose!");
-		this.losses = losses;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -179,8 +171,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void dealerBustYouWinNotification(int wins, int losses, int ties) {
 		notifications.setText("The Dealer went bust. You win!");
-		this.wins = wins;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -189,8 +180,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void youBeatDealerNotification(int wins, int losses, int ties) {
 		notifications.setText("You got 21, You win!");
-		this.wins = wins;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -199,8 +189,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void dealerBeatsYouNotification(int wins, int losses, int ties) {
 		notifications.setText("Dealer got to 21, You win!");
-		this.wins = wins;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -209,8 +198,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void bothTieNotification(int wins, int losses, int ties) {
 		notifications.setText("You and dealer tie!");
-		this.ties = ties;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 
 	/**
@@ -219,8 +207,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void quitGameNotification(int wins, int losses, int ties) {
 		notifications.setText("You quit, You lose!");
-		this.losses = losses;
-		updateScoreboard();
+		updateScoreboard(wins, losses, ties);
 	}
 }
 
