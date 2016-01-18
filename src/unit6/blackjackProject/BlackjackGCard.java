@@ -1,4 +1,5 @@
 package unit6.blackjackProject;
+
 /**
  * Models a blackjack card.  The value of a blackjack card is computed.
  * @author Mark Jones
@@ -9,17 +10,17 @@ public class BlackjackGCard extends GCard {
 	/**
 	 * The highest possible value of an ace.
 	 */
-	public static int HIGH_ACE_VALUE = 11;
+	public static final int HIGH_ACE_VALUE = 11;
 	
 	/**
 	 * The lowest possible value for an ace.
 	 */
-	public static int LOW_ACE_VALUE = 1;
+	public static final int LOW_ACE_VALUE = 1;
 	
 	/**
 	 * The value of all face cards (jack, queen, king)
 	 */
-	public static int FACE_VALUE = 10;
+	public static final int FACE_VALUE = 10;
 	
 	/**
 	 * Creates a new blackjack card.

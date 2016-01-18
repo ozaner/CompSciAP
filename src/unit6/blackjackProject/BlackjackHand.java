@@ -23,28 +23,32 @@ public class BlackjackHand extends Hand {
 	 * Returns the highest legal value for a blackjack hand.
 	 * @return
 	 */
-	public int handValue() {
+	public int handValue()
+	{
 		int value = 0;
-		int aces = 0;
+		int highAces = 0;
 		
-		//Adds values of non-aces.
+		//Adds values of the entire hand.
 		for(Card g: this)
 		{
-			//If card is not an ace add its value to the count.
+			//If card is an ace add its high value, else use normal value.
 			if(g.getRank().toString() == "a")
-				aces++;
+			{
+				value += BlackjackGCard.HIGH_ACE_VALUE;
+				highAces++;
+			}
 			else
 				value += ((BlackjackGCard)g).value();
 		}
 		
-		//Adds values of aces.
-		for(int x = 0; x < aces; x++)
+		//If the value is over 21 and there are still high aces.
+		//Set those high aces to low ones.
+		while(value > 21 && highAces > 0)
 		{
-			if(value <= BLACKJACK_VALUE - BlackjackGCard.HIGH_ACE_VALUE)
-				value += BlackjackGCard.HIGH_ACE_VALUE;
-			else
-				value += BlackjackGCard.LOW_ACE_VALUE;
+			value += BlackjackGCard.LOW_ACE_VALUE - BlackjackGCard.HIGH_ACE_VALUE;
+			highAces--;
 		}
+		
 		return value;
 	}
 
