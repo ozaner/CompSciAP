@@ -33,7 +33,7 @@ public class BlackjackGCard extends GCard {
 	
 	/**
 	 * Convenience method for making a deck of BlackjackGCards.
-	 * @return        the new deck
+	 * @return the new deck
 	 */
 	public static Deck makeDeck() {
 		Deck deck = new Deck();

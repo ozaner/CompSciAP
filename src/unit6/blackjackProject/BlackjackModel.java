@@ -69,7 +69,6 @@ public class BlackjackModel {
 	/**
 	 * Starts a new Round by dealing 2 cards, one face down,
 	 * one face up, to both the player and the dealer.
-	 * @return Whether the round was started or not(quit).
 	 */
 	public void newRound()
 	{
@@ -81,7 +80,6 @@ public class BlackjackModel {
 		bv.cardDealtToDealerNotification(dealer.dealFaceUp(dealer));
 		bv.cardDealtToPlayerNotification(dealer.dealFaceUp(player));
 		bv.cardDealtToDealerNotification(dealer.dealFaceDown(dealer));
-		checkWinConditions(); //Check to see if anyone won right away.
 	}
 	
 	/**
@@ -94,62 +92,19 @@ public class BlackjackModel {
 	}
 	
 	/**
-	 * Ends the player's turn.
+	 * Does dealer's turn and decides who wins.
 	 */
 	public void stay()
 	{
-		if(dealer.handValue() < 17) //if hand value is 17 or more, stay.
+		while(dealer.handValue() < 17) //if hand value is 17 or more, stay.
 			bv.cardDealtToDealerNotification(dealer.dealFaceDown(dealer));
 		checkWinConditions();
-	}	
-
-	/**
-	 * Checks if player or dealer has gotten a 21 or blackjack
-	 * and sends appropriate callback to the {@link #bv}.
-	 * @return Whether or not someone has won.
-	 */
-	public boolean checkForWin()
-	{
-		if(player.handValue() == 21 && dealer.handValue() == 21) //If both got 21.
-		{
-			if(player.hasBlackjack() && dealer.hasBlackjack()) //If both got blackjack as well.
-			{
-				ties++;
-				bv.bothTieNotification(wins, losses, ties);
-				return true;
-			}
-			else if(player.hasBlackjack()) //If player has a blackjack.
-			{
-				wins++;
-				bv.youBeatDealerNotification(wins, losses, ties);
-				return true;
-			}
-			else //Dealer must have blackjack.
-			{
-				losses++;
-				bv.dealerBeatsYouNotification(wins, losses, ties);
-				return true;
-			}
-		}
-		else if(player.handValue() == 21) //If player got 21.
-		{
-			wins++;
-			bv.youBeatDealerNotification(wins, losses, ties);
-			return true;
-		}
-		else if(dealer.handValue() == 21) //If dealer got 21.
-		{
-			losses++;
-			bv.dealerBeatsYouNotification(wins, losses, ties);
-			return true;
-		}
-		return false;
 	}
-	
+
 	/**
 	 * Checks if player or dealer has gone bust and
 	 * sends appropriate callback to the {@link #bv}.
-	 * 	 * @return Whether or not someone has bust.
+	 * @return Whether or not this check has resulted in a winner/tie.
 	 */
 	public boolean checkForBust()
 	{
@@ -175,13 +130,66 @@ public class BlackjackModel {
 	}
 	
 	/**
-	 * Checks for any game ending conditions.
+	 * Checks to see if any player has a blackjack.
+	 * Whoever does wins, if both have one its a tie.
+	 * @return Whether or not this check has resulted in a winner/tie.
+	 */
+	public boolean checkForBlackjack()
+	{
+		if(player.hasBlackjack() && dealer.hasBlackjack()) //If both got blackjack as well.
+		{
+			ties++;
+			bv.bothTieNotification(wins, losses, ties);
+			return true;
+		}
+		else if(player.hasBlackjack()) //If player has a blackjack.
+		{
+			wins++;
+			bv.youBeatDealerNotification(wins, losses, ties);
+			return true;
+		}
+		else if(dealer.hasBlackjack()) //If dealer has a blackjack.
+		{
+			losses++;
+			bv.dealerBeatsYouNotification(wins, losses, ties);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks who has a bigger hand. Always returns a winner.
+	 * Sends appropriate callback to the {@link #bv}.
+	 */
+	public void checkForWin()
+	{
+		if(player.handValue() > dealer.handValue()) //If player is over dealer (checkForBust insures not a bust)
+		{
+			wins++;
+			bv.youBeatDealerNotification(wins, losses, ties);
+		}
+		else if(dealer.handValue() > player.handValue()) //If dealer is over player
+		{
+			losses++;
+			bv.dealerBeatsYouNotification(wins, losses, ties);
+		}
+		else //Must be a tie
+		{
+			ties++;
+			bv.bothTieNotification(wins, losses, ties);
+		}
+	}
+	
+	/**
+	 * Ends the round and finds a winner.
 	 */
 	public void checkWinConditions()
 	{
-		//If any win conditions have been met.
-		if(checkForWin() || checkForBust())
-			gameInProgress = false;
+		if(!checkForBust()) //If nobody bust.
+			if(!checkForBlackjack()) //If nobody has a blackjack.
+				checkForWin(); //Always returns a winner.
+		gameInProgress = false;
+				
 	}
 	
 	/**

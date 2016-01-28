@@ -15,7 +15,7 @@ import acm.program.GraphicsProgram;
  * A Blackjack game using the ACM Library.
  * <br><br>
  * AP Computer Science<br>
- * 1/??/16<br>
+ * 1/28/16<br>
  * @author Ozaner Hansha
  * @author Mark Jones
  * 
@@ -47,7 +47,10 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	private static final double NAME_Y = INITIAL_SIZE.getHeight() * .01;
 	
-	private static final Font NAME_FONT = new Font("Papyrus", Font.PLAIN, 19);
+	/**
+	 * The font of the {@link #nameTags}.
+	 */
+	private static final Font NAME_FONT = new Font("Papyrus", Font.BOLD, 19);
 		
 	/**
 	 * A pointer to the {@link BlackjackModel} corresponding with
@@ -285,7 +288,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void youBeatDealerNotification(int wins, int losses, int ties) {
-		notifications.setText("You got 21, You win!");
+		notifications.setText("You beat the Dealer, You win!");
 		endRound(wins, losses, ties);
 	}
 
@@ -294,7 +297,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void dealerBeatsYouNotification(int wins, int losses, int ties) {
-		notifications.setText("Dealer got to 21, You Lose!");
+		notifications.setText("Dealer beat you, You Lose!");
 		endRound(wins, losses, ties);
 	}
 
@@ -303,7 +306,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 */
 	@Override
 	public void bothTieNotification(int wins, int losses, int ties) {
-		notifications.setText("You and dealer tie!");
+		notifications.setText("You and the Dealer tie!");
 		endRound(wins, losses, ties);
 	}
 
@@ -316,4 +319,3 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		endRound(wins, losses, ties);
 	}
 }
-
