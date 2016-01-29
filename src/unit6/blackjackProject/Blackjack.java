@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -53,6 +55,11 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	private static final Font NAME_FONT = new Font("Papyrus", Font.BOLD, 19);
 		
 	/**
+	 * How long, in seconds, a turn is.
+	 */
+	private static final int TURN_TIME = 10;
+	
+	/**
 	 * A pointer to the {@link BlackjackModel} corresponding with
 	 * this instance of {@link Backjack} for callbacks.
 	 */
@@ -70,6 +77,16 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	private JLabel scoreboard = new JLabel();
 	
 	/**
+	 * How much time is remaining this turn.
+	 */
+	private JLabel timerLabel = new JLabel();
+	
+	/**
+	 * Keeps track of how long the player has to make their move.
+	 */
+	private Timer timer = new Timer();
+	
+	/**
 	 * Name tags for the deck, dealer, and the player.
 	 */
 	private JLabel[] nameTags = {new JLabel("Deck"),
@@ -77,7 +94,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 								new JLabel("Player")};
 	
 	/**
-	 * 
+	 * The 3 turn buttons.
 	 */
 	private JButton[] buttons = {new JButton("New Round"),
 								new JButton("Hit"),
@@ -136,12 +153,15 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		add(nameTags[1], DEALER_X, NAME_Y);
 		add(nameTags[2], PLAYER_X, NAME_Y);
 		
+		add(timerLabel, NORTH);
+		
 		add(scoreboard, SOUTH);
 		updateScoreboard(0,0,0); //Starts scoreboard at 0
-		
 		addActionListeners();
 	}
 
+
+	
 	/**
 	 * Run a new round of blackjack.
 	 */
@@ -150,6 +170,31 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		
 	}
 
+	public void startTimer()
+	{
+		timer.cancel();
+		timer = new Timer();
+		timer.schedule(new TimerTask()
+		{
+			int time = TURN_TIME;
+			@Override
+			public void run()
+			{
+				if(time >= 0)
+				{
+					timerLabel.setText("Time Left: " + time + " Seconds.");
+					time--;
+				}
+				else if(time == -1)
+				{
+					bm.stay(); //Will stay automatically if nothing is done.
+					cancel();
+					timer = new Timer();
+				}
+			}
+		},0,1000);
+	}
+	
 	/**
 	 * Starts a new round.
 	 */
@@ -176,6 +221,7 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 			buttons[0].setText("Give Up");
 			buttons[1].setEnabled(true);
 			buttons[2].setEnabled(true);
+			startTimer();
 		}
 		else
 		{
@@ -215,9 +261,16 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand() == "Hit")
+		{
 			bm.hit();
+			startTimer();
+		}
 		else if(e.getActionCommand() == "Stay")
+		{
 			bm.stay();
+			timer.cancel();
+			timerLabel.setText("");
+		}
 		else //Must be reset, only 3 buttons.
 			newRound();
 	}
