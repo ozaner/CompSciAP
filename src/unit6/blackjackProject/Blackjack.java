@@ -159,8 +159,6 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		updateScoreboard(0,0,0); //Starts scoreboard at 0
 		addActionListeners();
 	}
-
-
 	
 	/**
 	 * Run a new round of blackjack.
@@ -202,18 +200,12 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		if(!bm.isGameInProgress())
 		{
 			//Removes all cards from canvas.
-			ArrayList<GObject> toRemove = new ArrayList<GObject>();
-			for(int x = 0; x < getGCanvas().getElementCount(); x++)
+			for(int x = getGCanvas().getElementCount()-1; x > 0; x--)
 			{
 				if(getGCanvas().getElement(x) instanceof BlackjackGCard)
-				{ 		
-					toRemove.add(getGCanvas().getElement(x));
-				}												
-			}
-			//Can't do it directly as it would modify the list currently being iterated through
-			for(GObject g: toRemove)
-			{
-				getGCanvas().remove(g);
+				{
+					getGCanvas().remove(getGCanvas().getElement(x));
+				}
 			}
 			
 			bm.newRound();
