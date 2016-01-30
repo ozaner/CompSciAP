@@ -2,8 +2,7 @@ package unit6.blackjackProject;
 
 /**
  * Abstractly models a Blackjack game.
- * @author Mark Jones
- *
+ * @author Ozaner Hansha
  */
 public class BlackjackModel {
 

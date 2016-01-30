@@ -3,14 +3,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import acm.graphics.GImage;
-import acm.graphics.GObject;
 import acm.program.GraphicsProgram;
 
 /**
@@ -18,10 +16,8 @@ import acm.program.GraphicsProgram;
  * <br><br>
  * AP Computer Science<br>
  * 1/28/16<br>
+ * Dr. Jones
  * @author Ozaner Hansha
- * @author Mark Jones
- * 
- * @version 1.0
  */
 @SuppressWarnings("serial")
 public class Blackjack extends GraphicsProgram implements BlackjackView {
@@ -113,13 +109,6 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		(new Blackjack()).start();
 	}
 
-	/**
-	 * Constructor for Blackjack when running as an application.
-	 */
-	public Blackjack() {
-		
-	}
-
 	/** 
 	 * Create the Model (with this for callbacks).
 	 * Set up the GUI.
@@ -159,15 +148,11 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		updateScoreboard(0,0,0); //Starts scoreboard at 0
 		addActionListeners();
 	}
-	
-	/**
-	 * Run a new round of blackjack.
-	 */
-	@Override
-	public void run() {
-		
-	}
 
+	/**
+	 * Starts the turn timer.
+	 * (Can't put timer in model because interface is not editable.)
+	 */
 	public void startTimer()
 	{
 		timer.cancel();
