@@ -38,7 +38,6 @@ public class BlackjackModel {
 	public BlackjackModel(BlackjackView blackjackView)
 	{
 		bv = blackjackView;
-		// . . .
 	}
 	
 	/**

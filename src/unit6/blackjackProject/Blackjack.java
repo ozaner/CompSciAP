@@ -3,12 +3,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import acm.graphics.GImage;
+import acm.graphics.GTurtle;
 import acm.program.GraphicsProgram;
 
 /**
@@ -48,12 +52,23 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	/**
 	 * The font of the {@link #nameTags}.
 	 */
-	private static final Font NAME_FONT = new Font("Papyrus", Font.BOLD, 19);
+	private static final Font NAME_FONT = new Font("Comic Sans MS", Font.PLAIN, 19);
 		
 	/**
 	 * How long, in seconds, a turn is.
 	 */
 	private static final int TURN_TIME = 10;
+	
+	/**
+	 * The turtle.
+	 */
+	private GTurtle turtle = new GTurtle();
+	
+	/**
+	 * Initial Coordinates of turtle.
+	 */
+	private static final double TURTLE_X = INITIAL_SIZE.getWidth() * .09,
+								TURTLE_Y = INITIAL_SIZE.getWidth() * .11;
 	
 	/**
 	 * A pointer to the {@link BlackjackModel} corresponding with
@@ -105,7 +120,8 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 * Entry point when running Blackjack as an application.
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		(new Blackjack()).start();
 	}
 
@@ -114,8 +130,8 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 * Set up the GUI.
 	 */
 	@Override
-	public void init() {
-
+	public void init()
+	{
 		bm = new BlackjackModel(this);
 
 		setSize(INITIAL_SIZE);
@@ -123,6 +139,9 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		
 		notifications.setText("Welcome to BlackJack. Press New Game to start a new round.");
 		notifications.setIcon(new ImageIcon(Blackjack.class.getResource("/unit6/blackjackProject/bjLogo.png")));
+		notifications.setFont(NAME_FONT);
+		timerLabel.setFont(NAME_FONT);
+		scoreboard.setFont(NAME_FONT);
 		
 		//GUI
 		add(notifications, NORTH);
@@ -143,12 +162,32 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		add(nameTags[2], PLAYER_X, NAME_Y);
 		
 		add(timerLabel, NORTH);
-		
 		add(scoreboard, SOUTH);
+		add(turtle, TURTLE_X, TURTLE_Y);
+		startTurtleAI();
 		updateScoreboard(0,0,0); //Starts scoreboard at 0
 		addActionListeners();
 	}
 
+	/**
+	 * Starts the turtle ai on a new thread.
+	 */
+	public void startTurtleAI()
+	{
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask(){
+		public void run()
+		{
+		//"A.I" controlled greg army
+		switch(new Random().nextInt(5))
+		{
+		case 0:	turtle.left(12);			break;
+		case 1:	turtle.right(12);		break;
+		case 2:	turtle.forward(2);		break;
+		case 4:	turtle.forward(-2);		break;
+		}}}, 25, 5);
+	}
+	
 	/**
 	 * Starts the turn timer.
 	 * (Can't put timer in model because interface is not editable.)
@@ -181,7 +220,8 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	/**
 	 * Starts a new round.
 	 */
-	public void newRound() {
+	public void newRound()
+	{
 		if(!bm.isGameInProgress())
 		{
 			//Removes all cards from canvas.
@@ -203,6 +243,8 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 		else
 		{
 			bm.quitGame();
+			timerLabel.setText("");
+			timer.cancel();
 		}
 	}
 	
@@ -236,7 +278,8 @@ public class Blackjack extends GraphicsProgram implements BlackjackView {
 	 * Handler for button actions.
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		if(e.getActionCommand() == "Hit")
 		{
 			bm.hit();
