@@ -75,6 +75,33 @@ public class Month2D {
 		
 		return monthTable;
 	}
+	
+	/**
+	 * Computes a 6x7 table with the days of the month. 
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static String[][] makeMonthClean(int year, Month month) {
+		String[][] monthTable = new String[6][7];
+		DayOfWeek startDayOfWeek = dow2016.get(month); // computes the starting day of week
+		
+		int ROWS = monthTable.length;
+		int COLS = monthTable[0].length;
+		int dayShift = startDayOfWeek.ordinal();
+		
+		for(int i = dayShift; i < month.getDays() + dayShift; i++)
+			monthTable[i/COLS][i%COLS] = "" + (i -dayShift + 1);
+		
+		for(int i = 0; i < ROWS*COLS; i++)
+			if(monthTable[i/COLS][i%COLS] == null)
+				monthTable[i/COLS][i%COLS] = "";
+
+		// Write code here to correctly fill up the table.
+		// Hint: You may find the built-in ordinal() method for DayOfWeek to be useful.
+		
+		return monthTable;
+	}
 
 	// Usage: dow2016.get(month) ==> starting day of week for each month in 2016
 	// This is a declarative approach to encoding the mapping from month to starting day of the week.
