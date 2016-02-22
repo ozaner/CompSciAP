@@ -1,6 +1,8 @@
 package unit7.examples;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -46,6 +48,16 @@ public class ArrayListExamples {
 			}
 		}
 		System.out.println("list3 after modifications = " + list3);
+		
+		
+		ArrayList<Integer> listOfIntegers = new ArrayList<Integer>(Arrays.asList(-1,5,9,-4,0,-6,8));
+		System.out.println(listOfIntegers);
+		for(Iterator i = listOfIntegers.iterator(); i.hasNext();)
+		{
+			int temp = (int)i.next();
+			if(temp < 0)
+				i.remove();
+		}
 	}
 	
 	/*

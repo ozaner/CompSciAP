@@ -42,7 +42,7 @@ public class Month2D {
 				System.out.printf("%4s", d.toString().substring(0, 3));
 			}
 			System.out.printf("\n");
-			String[][] monthTable = makeMonth(2016, m);  // layout of days for month m in year 2016
+			String[][] monthTable = makeMonthClean(2016, m);  // layout of days for month m in year 2016
 			for (int r = 0; r < monthTable.length; r++) {
 				for (int c = 0; c < monthTable[r].length; c++) {
 					System.out.printf("%4s", monthTable[r][c]);
@@ -59,7 +59,7 @@ public class Month2D {
 	 * @param month
 	 * @return
 	 */
-	public static String[][] makeMonth(int year, Month month) {
+	public static String[][] makeMonthOLD(int year, Month month) {
 		String[][] monthTable = new String[6][7];
 		DayOfWeek startDayOfWeek = dow2016.get(month); // computes the starting day of week
 		
@@ -82,7 +82,7 @@ public class Month2D {
 	 * @param month
 	 * @return
 	 */
-	public static String[][] makeMonthClean(int year, Month month) {
+	public static String[][] makeMonthCleanOLD(int year, Month month) {
 		String[][] monthTable = new String[6][7];
 		DayOfWeek startDayOfWeek = dow2016.get(month); // computes the starting day of week
 		
@@ -96,6 +96,49 @@ public class Month2D {
 		for(int i = 0; i < ROWS*COLS; i++)
 			if(monthTable[i/COLS][i%COLS] == null)
 				monthTable[i/COLS][i%COLS] = "";
+
+		// Write code here to correctly fill up the table.
+		// Hint: You may find the built-in ordinal() method for DayOfWeek to be useful.
+		
+		return monthTable;
+	}
+	
+	/**
+	 * Computes a 6x7 table with the days of the month. 
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static String[][] makeMonth(int year, Month month) {
+		String[][] monthTable = new String[6][7];
+		DayOfWeek startDayOfWeek = dow2016.get(month); // computes the starting day of week
+		
+		for(int i = 0; i < monthTable.length*monthTable[0].length; i++)
+			monthTable[i/monthTable[0].length][i%monthTable[0].length] = i < startDayOfWeek.ordinal()
+				|| (i -startDayOfWeek.ordinal() + 1) > month.getDays()?  "" : "" + (i -startDayOfWeek.ordinal() + 1);
+
+		// Write code here to correctly fill up the table.
+		// Hint: You may find the built-in ordinal() method for DayOfWeek to be useful.
+		
+		return monthTable;
+	}
+	
+	/**
+	 * Computes a 6x7 table with the days of the month. 
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static String[][] makeMonthClean(int year, Month month) {
+		String[][] monthTable = new String[6][7];
+		DayOfWeek startDayOfWeek = dow2016.get(month); // computes the starting day of week
+		
+		int ROWS = monthTable.length;
+		int COLS = monthTable[0].length;
+		int dayShift = startDayOfWeek.ordinal();
+		
+		for(int i = 0; i < ROWS*COLS; i++)
+				monthTable[i/COLS][i%COLS] = i < dayShift || (i -dayShift + 1) > month.getDays()?  "" : "" + (i -dayShift + 1);
 
 		// Write code here to correctly fill up the table.
 		// Hint: You may find the built-in ordinal() method for DayOfWeek to be useful.
