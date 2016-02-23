@@ -1,4 +1,5 @@
 package unit7.concentration;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
@@ -19,30 +20,33 @@ import acm.program.GraphicsProgram;
 
 @SuppressWarnings("serial")
 public class Concentration extends GraphicsProgram {
-
-	// class constants
-
-	// instance variables
+	
 	private ConcentrationModel model;
 
 	public static void main(String[] args) {
 		new Concentration().start(args);
 	}
 
-	public void init() {		
+	public void init() {
 		model = new ConcentrationCardModel(this);
+		setBackground(Color.LIGHT_GRAY);
 		addActionListeners();
 		addMouseListeners();
 	}
 
-	public void run() {}
+	public void run() {
+		model.startGame(4, 4, 4);
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		
 	}
 
 	public void gameStartedNotification(Cell[][] board, int player) {
-		
+		int rows = board.length;
+		int cols = board[0].length;
+		for(int i = 0; i < rows*cols; i++)
+			add((GCard)board[i/cols][i%cols], i/cols * model.getCellWidth(), i%cols * model.getCellHeight());
 	}
 
 	/**

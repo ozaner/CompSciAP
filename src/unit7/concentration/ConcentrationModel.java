@@ -1,24 +1,20 @@
 package unit7.concentration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ListIterator;
 
 public abstract class ConcentrationModel {
 
-	// instance variables
 	private Concentration app;        // for callbacks to the view
 	private int rows, cols, players;  // basic configuration for the current game
 	private Cell[][] board;           // 2D layout of the cells in the game
-	
-	private int[] scores = new int[4];
-	// . . . more instance variables . . .
-
+	private int[] scores;
 
 	public ConcentrationModel(Concentration app) {
 		this.app = app;
 	}
 	
-	// abstract methods
 	public abstract double getCellWidth();
 	public abstract double getCellHeight();
 	public abstract ListIterator<Cell> getCellIterator();
@@ -28,18 +24,12 @@ public abstract class ConcentrationModel {
 		this.cols = cols;
 		this.players = players;
 		
-		// create the board and fill it up
-
+		//Creates and fills board
+		board = new Cell[rows][cols];
+		fillBoard();
 		
-		// initialize the player scores
-
-		
-		// initialize other state variables and notify the GUI that the game has started
-
-	}
-
-	private ArrayList<Cell> getPairs() {
-		
+		scores = new int[players]; //Init Scores
+		app.gameStartedNotification(board, players); //Starts game
 	}
 	
 	/**
@@ -48,7 +38,7 @@ public abstract class ConcentrationModel {
 	private void fillBoard() {
 		int numCellsNeeded = rows * cols;
 		ArrayList<Cell> cells = new ArrayList<Cell>(numCellsNeeded);
-		ListIterator<Cell> cellIterator;
+		ListIterator<Cell> cellIterator = null;
 
 		// create a list of the cells to use for our board
 		// we use the abstract method getCellIterator() to generate the cells
@@ -65,8 +55,8 @@ public abstract class ConcentrationModel {
 		}
 		Collections.shuffle(cells); // randomize the list
 		
-		// supply code below to assign the cells to the 2D board array
-		
+		for(int i = 0; i < numCellsNeeded; i++)
+			board[i/cols][i%cols] = cellIterator.next();
 	}
 
 	/** 
@@ -74,5 +64,6 @@ public abstract class ConcentrationModel {
 	 * @param cell  the chosen cell
 	 */
 	public void choose(Cell cell) {
+		
 	}
 }
