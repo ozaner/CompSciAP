@@ -41,6 +41,7 @@ public class ConcentrationCardModel extends ConcentrationModel {
 	@Override
 	public ListIterator<Cell> getCellIterator() {
 		Deck deck = GCard.makeDeck();
+		deck.shuffle();
 		ArrayList<Cell> cells = new ArrayList<Cell>();
 		for(Card c: deck) {
 			cells.add((GCard)c);

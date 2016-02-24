@@ -1,15 +1,29 @@
 package unit7.concentration;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.ListIterator;
 
+/**
+ * The generic model of a game of Concentration with,<br>
+ * a table of {@link Cell}s, multiple {@link #players},<br>
+ * {@link #scores}, and {@link #MEMORY_TIME}.<br>
+ * @author Ozaner Hansha
+ */
 public abstract class ConcentrationModel {
-
+	
 	private Concentration app;        // for callbacks to the view
 	private int rows, cols, players;  // basic configuration for the current game
+	private int currentPlayer;
 	private Cell[][] board;           // 2D layout of the cells in the game
 	private int[] scores;
+
+	
+	/**
+	 * A buffer for the 2 currently chosen cells.
+	 */
+	private Cell[] currentCells = new Cell[2];
 
 	public ConcentrationModel(Concentration app) {
 		this.app = app;
@@ -23,13 +37,25 @@ public abstract class ConcentrationModel {
 		this.rows = rows;
 		this.cols = cols;
 		this.players = players;
+		scores = new int[players+1]; //Init Scores
 		
 		//Creates and fills board
 		board = new Cell[rows][cols];
 		fillBoard();
 		
-		scores = new int[players]; //Init Scores
 		app.gameStartedNotification(board, players); //Starts game
+	}
+	
+	/**
+	 * Changes {@link #currentPlayer} to the next player.
+	 * @return The currentPlayer
+	 */
+	public int nextPlayer() {
+		if(currentPlayer < players)
+			currentPlayer++;
+		else
+			currentPlayer = 1;
+		return currentPlayer;
 	}
 	
 	/**
@@ -56,7 +82,7 @@ public abstract class ConcentrationModel {
 		Collections.shuffle(cells); // randomize the list
 		
 		for(int i = 0; i < numCellsNeeded; i++)
-			board[i/cols][i%cols] = cellIterator.next();
+			board[i/cols][i%cols] = cells.get(i);
 	}
 
 	/** 
@@ -64,6 +90,24 @@ public abstract class ConcentrationModel {
 	 * @param cell  the chosen cell
 	 */
 	public void choose(Cell cell) {
-		
+		if(currentCells[0] == null) {
+			currentCells[0] = cell;
+			app.selectCellNotification(cell);
+		}
+		else if(currentCells[1] == null && cell != currentCells[0]){
+			currentCells[1] = cell;
+			app.selectCellNotification(cell);
+			if(cell.equals(currentCells[0]))
+				match();
+			else {
+				app.deselectCellsNotification(currentCells[0], currentCells[1], nextPlayer());
+				currentCells = new Cell[2];
+			}
+		}	
+	}
+	
+	public void match() {
+		app.removeCellsNotification(currentCells[0],currentCells[1],currentPlayer,scores[currentPlayer]);
+		currentCells = new Cell[2]; //Resets cell buffer
 	}
 }

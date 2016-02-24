@@ -1,8 +1,10 @@
 package unit7.concentration;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-
+import javax.swing.Timer;
+import acm.graphics.GPoint;
 import acm.program.GraphicsProgram;
 
 /**
@@ -14,19 +16,38 @@ import acm.program.GraphicsProgram;
  * Thus, for the most part, the classes used in earlier playing cards apps were able
  * to be reused without modification.
  * 
- * @author markjones
- *
+ * @author Ozaner Hansha
+ * Dr. Jones<br>
+ * AP Computer Science<br>
+ * February 25th, 2016<br>
  */
 
 @SuppressWarnings("serial")
 public class Concentration extends GraphicsProgram {
 	
+	/**
+	 * The amount of time to memorize the cells (in milliseconds).
+	 * @see #cellTimer
+	 */
+	private static final int CELL_TIME = 1000;
+	
+	/**
+	 * A reference to the {@link ConcentrationCardModel} for callbacks.
+	 */
 	private ConcentrationModel model;
 
+	/**
+	 * The main method, starts graphics program
+	 * @param args - Not expecting any args.
+	 */
 	public static void main(String[] args) {
 		new Concentration().start(args);
 	}
 
+	/**
+	 * Initializes GUI and adds event listeners.
+	 * @see acm.program.GraphicsProgram#init()
+	 */
 	public void init() {
 		model = new ConcentrationCardModel(this);
 		setBackground(Color.LIGHT_GRAY);
@@ -35,13 +56,22 @@ public class Concentration extends GraphicsProgram {
 	}
 
 	public void run() {
-		model.startGame(4, 4, 4);
+		model.startGame(8, 4, 4);
 	}
 
+	/**
+	 * Handles GUI input.
+	 * @see acm.program.Program#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 		
 	}
 
+	/**
+	 * Adds the board and adds player scores to the GUI.
+	 * @param board - 2D Array of cells.
+	 * @param player - number of players.
+	 */
 	public void gameStartedNotification(Cell[][] board, int player) {
 		int rows = board.length;
 		int cols = board[0].length;
@@ -50,10 +80,12 @@ public class Concentration extends GraphicsProgram {
 	}
 
 	/**
-	 * Tell the model that a cell was chosen.
+	 * Checks to see if a cell was chosen and informs {@link #model}.
 	 */
 	public void mouseClicked(MouseEvent e) {
-		
+		Object obj = getElementAt(new GPoint(e.getPoint()));
+		if(obj instanceof GCard)
+			model.choose((Cell)obj);
 	}
 
 	/**
@@ -61,7 +93,7 @@ public class Concentration extends GraphicsProgram {
 	 * @param cell  the chosen cell
 	 */
 	public void selectCellNotification(Cell cell) {
-		
+		cell.turnFaceUp();
 	}
 
 	/**
@@ -72,9 +104,14 @@ public class Concentration extends GraphicsProgram {
 	 * @param score       the player's new score     
 	 */
 	public void removeCellsNotification(Cell cell1, Cell cell2, int player, int score) {
-		// set up a timer to generates an event so that after a brief pause, 
-		// the cells are removed
-		// . . .
+		new Timer(CELL_TIME, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				remove((GCard)cell1);
+				remove((GCard)cell2);
+				((Timer)e.getSource()).stop();
+			}	
+		}).start();
 	}
 
 	/**
@@ -84,11 +121,17 @@ public class Concentration extends GraphicsProgram {
 	 * @param nextPlayer  the next player to play
 	 */
 	public void deselectCellsNotification(Cell cell1, Cell cell2, int nextPlayer) {
-		// set up a timer to generates an event so that after a brief pause, 
-		// the cells are turned face down again
-		// . . .
+		
+		new Timer(CELL_TIME, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cell1.turnFaceDown();
+				cell2.turnFaceDown();
+				((Timer)e.getSource()).stop();
+			}	
+		}).start();
 	}
-
+	
 	/**
 	 * Notification that the game is over, and which players had the highest score.
 	 * @param winners    the winning players
