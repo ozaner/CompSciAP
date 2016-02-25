@@ -1,6 +1,4 @@
 package unit7.concentration;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ListIterator;
@@ -8,7 +6,7 @@ import java.util.ListIterator;
 /**
  * The generic model of a game of Concentration with,<br>
  * a table of {@link Cell}s, multiple {@link #players},<br>
- * {@link #scores}, and {@link #MEMORY_TIME}.<br>
+ * {@link #scores}.<br>
  * @author Ozaner Hansha
  */
 public abstract class ConcentrationModel {
@@ -18,6 +16,7 @@ public abstract class ConcentrationModel {
 	private int currentPlayer;
 	private Cell[][] board;           // 2D layout of the cells in the game
 	private int[] scores;
+	private int matchedCards;
 
 	
 	/**
@@ -33,10 +32,19 @@ public abstract class ConcentrationModel {
 	public abstract double getCellHeight();
 	public abstract ListIterator<Cell> getCellIterator();
 	
+	/**
+	 * Starts a new round by resetting all old values,<br>
+	 * creating a new board and sending it to the {@link #app}.
+	 * @param rows - Rows of board.
+	 * @param cols - Columns of board.
+	 * @param players - How many players.
+	 */
 	public void startGame(int rows, int cols, int players) {
 		this.rows = rows;
 		this.cols = cols;
 		this.players = players;
+		currentPlayer = 1;
+		matchedCards = 0;
 		scores = new int[players+1]; //Init Scores
 		
 		//Creates and fills board
@@ -106,8 +114,36 @@ public abstract class ConcentrationModel {
 		}	
 	}
 	
+	/**
+	 * Increases the {@link #matchedCards} and {@link #scores}
+	 * of a player by 2,<br> informs {@link #app} and calls 
+	 * {@link #gameOver()} if all matches found.
+	 */
 	public void match() {
+		scores[currentPlayer]+=2;
+		matchedCards+=2;
 		app.removeCellsNotification(currentCells[0],currentCells[1],currentPlayer,scores[currentPlayer]);
 		currentCells = new Cell[2]; //Resets cell buffer
+		if(matchedCards >= rows*cols)
+			gameOver();
+	}
+	
+	/**
+	 * Called when all matches are done.<br>
+	 * Finds the list of all winners and sends it back to the {@link #app}.
+	 * @see #match()
+	 */
+	public void gameOver() {
+		ArrayList<Integer> winners = new ArrayList<Integer>();
+		int max = scores[0];
+		for(int i = 0; i < scores.length; i++) {
+			if(scores[i] > max) {
+				max = scores[i];
+				winners.clear();
+				winners.add(i);
+			}
+			else if(scores[i] == max) winners.add(i);
+		}
+		app.gameOverNotification(winners);
 	}
 }
