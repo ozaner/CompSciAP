@@ -4,7 +4,13 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -44,6 +50,16 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	public static final int MAX_SIZE = 10;
 	
 	/**
+	 * The minimum amount of players.
+	 */
+	public static final int MIN_PLAYERS = 1;
+	
+	/**
+	 * The minimum size of the rows/columns.
+	 */
+	public static final int MIN_SIZE = 1;
+	
+	/**
 	 * How many spaces (" ") between each {@link #scores}.
 	 */
 	public static final int SCORE_SPACING = 8;
@@ -57,14 +73,26 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	 * Labels above {@link #options} boxes.
 	 */
 	public static final JLabel[] OPTION_LABELS = 
-		{new JLabel("Rows (1-10)"), new JLabel("Columns (1-10)"),
+		{new JLabel("Columns (1-10)"), new JLabel("Rows (1-10)"),
 		new JLabel("Players (1-4)"), new JLabel("Memory Time (0-5 Sec)")};
 	
 	/**
 	 * The font of the labels.
 	 */
-	private static final Font NAME_FONT = new Font("Ariel", Font.BOLD, 13);
+	public static final Font NAME_FONT = new Font("Ariel", Font.BOLD, 13);
 	
+	/**
+	 * Path of the tie sound effect.
+	 * @see #playSound(String)
+	 */
+	public static final String TIE_SOUND = "/concentrationTie.wav";
+	
+	/**
+	 * Path of the win sound effect.
+	 * @see #playSound(String)
+	 */
+	public static final String WIN_SOUND = "/concentrationWin.wav";
+			
 	/**
 	 * A reference to the {@link ConcentrationCardModel} for callbacks.
 	 */
@@ -223,6 +251,20 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	}
 
 	/**
+	 * Returns whether or not a string can be parsed to an int.
+	 * @param string - The string to check
+	 * @return True if string can be parsed to an int, else false.
+	 */
+	public boolean isInteger(String string) {
+	    try {
+	        Integer.valueOf(string);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	
+	/**
 	 * Starts a new game with the given parameters ({@link #options}).
 	 */
 	public void newGame() {
@@ -235,14 +277,23 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 		for(int i = 0; i < scores.length; i++)
 			scores[i].setText("Player " + (i+1) + ": 0");
 		
-		int rows = Integer.parseInt(options[0].getText());
-		int cols = Integer.parseInt(options[1].getText());
-		int players = Integer.parseInt(options[2].getText());
+		int rows,cols,players;
 		
-		//Checks if options are over the limit.
+		//Checks if options are invalid
+		rows = isInteger(options[0].getText()) ? 
+				Integer.parseInt(options[0].getText()): MIN_SIZE;
+		cols = isInteger(options[1].getText()) ? 
+				Integer.parseInt(options[1].getText()): MIN_SIZE;
+		players = isInteger(options[2].getText()) ? 
+				Integer.parseInt(options[2].getText()): MIN_PLAYERS;
+		
+		//Checks if options are over/under the limit.
 		if(rows > MAX_SIZE) rows = MAX_SIZE;
+		if(rows < MIN_SIZE) rows = MIN_SIZE;
 		if(cols > MAX_SIZE) cols = MAX_SIZE;
+		if(cols < MIN_SIZE) cols = MIN_SIZE;
 		if(players > MAX_PLAYERS) players = MAX_PLAYERS;
+		if(players < MIN_PLAYERS) players = MIN_PLAYERS;
 		
 		//Checks if there is an even # of cards.
 		if(rows*cols % 2 == 1)
@@ -255,7 +306,6 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 		
 		setSizeCells(rows, cols);
 		model.startGame(rows,cols,players);
-		
 		notifications.setText("Player 1's Turn");
 	}
 	
@@ -327,14 +377,36 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	 * @param winners    the winning players
 	 */
 	public void gameOverNotification(ArrayList<Integer> winners) {
-		if(winners.size() == 1)
-			notifications.setText("Player " + winners.get(0) + " wins!");
-		else {
-			String str = "Players " + winners.get(0);
-			for(int i = 1; i < winners.size(); i++)
-				str += " and " + i;
-			str += "!";
-			notifications.setText(str);
+		String str;
+		if(winners.size() == 1) {
+			str = "Player " + winners.get(0) + " wins!";
+			playSound(WIN_SOUND);
 		}
+		else {
+			str = "Players " + winners.get(0);
+			for(int i = 1; i < winners.size(); i++)
+				str += " and " + winners.get(i);
+			str += " win!";
+			playSound(TIE_SOUND);
+		}
+		notifications.setText(str);
+	}
+	
+	/**
+	 * Plays the given .wav file.
+	 * @param URL - Path of the sound in project.
+	 */
+	public void playSound(String URL) {
+		AudioInputStream audioIn;
+		try {
+			audioIn = AudioSystem.getAudioInputStream(Concentration.class.getResource(URL));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start();
+		}
+		catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

@@ -11,11 +11,36 @@ import java.util.ListIterator;
  */
 public abstract class ConcentrationModel {
 	
-	private Concentration app;        // for callbacks to the view
-	private int rows, cols, players;  // basic configuration for the current game
+	/**
+	 * A reference to this {@link ConcentrationModel}'s
+	 * Corresponding View for callbacks.
+	 */
+	private Concentration app;
+	
+	/**
+	 * 1 of 3 basic settings for a game.
+	 */
+	private int rows, cols, players;
+	
+	/**
+	 * Keeps track of which player's turn it is.
+	 */
 	private int currentPlayer;
-	private Cell[][] board;           // 2D layout of the cells in the game
+	
+	/**
+	 * A 2D array of cells representing
+	 * the concentration board.
+	 */
+	private Cell[][] board;
+	
+	/**
+	 * An array of the scores of the players.
+	 */
 	private int[] scores;
+	
+	/**
+	 * How many cards have been removed (matched) so far.
+	 */
 	private int matchedCards;
 
 	
@@ -24,12 +49,27 @@ public abstract class ConcentrationModel {
 	 */
 	private Cell[] currentCells = new Cell[2];
 
+	/**
+	 * Constructs a new model with a view reference.
+	 * @param app - View for callbacks
+	 */
 	public ConcentrationModel(Concentration app) {
 		this.app = app;
 	}
 	
+	/**
+	 * @return The width in pixels of any given cell.
+	 */
 	public abstract double getCellWidth();
+	
+	/**
+	 * @return The height in pixels of any given cell.
+	 */
 	public abstract double getCellHeight();
+	
+	/**
+	 * @return A listIterator of the Cell objects to be placed on the board.
+	 */
 	public abstract ListIterator<Cell> getCellIterator();
 	
 	/**
