@@ -11,8 +11,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -130,6 +132,10 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	 */
 	private JSlider timerSlider = new JSlider(0,5000,1000);
 	
+	private ButtonGroup timerButtonGroup = new ButtonGroup();
+	private JRadioButton[] timerButtons = 
+		{new JRadioButton("Timer On"), new JRadioButton("Timer Off")};
+	
 	/**
 	 * The amount of time to memorize the cells (in milliseconds).
 	 * @see #cellTimer
@@ -157,9 +163,10 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 		model = new ConcentrationCardModel(this);
 		setBackground(Color.LIGHT_GRAY);
 		
+		//Adds notification bar
 		notifications.setFont(NAME_FONT);
 		add(notifications, NORTH);
-		notifications.setText("Player 1's Turn");
+		notifications.setText("Welcome to Concentration!");
 		
 		//Scoreboard
 		scoreText.setFont(NAME_FONT);
@@ -185,13 +192,18 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 			add(options[i], WEST);
 		}
 		
+		//Adds Turn timer buttons
+		for(JRadioButton j: timerButtons) {
+			timerButtonGroup.add(j);
+			add(j,WEST);
+		}
+		timerButtons[0].setSelected(true);
+		
 		//Adds Timer slider
-		add(new JLabel(" "),WEST);
 		add(OPTION_LABELS[3],WEST);
 		timerSlider.addChangeListener(this);
 		add(timerSlider,WEST);
 		
-		newGame();
 		addActionListeners();
 		addMouseListeners();
 	}
@@ -316,7 +328,7 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	 */
 	public void setSizeCells(int rows, int cols) {
 		int xOffset = 152, yOffset = 117;
-		int minWidth = 580, minHeight = 440;
+		int minWidth = 580, minHeight = 480;
 		int windowWidth = (int)(model.getCellWidth()+CARD_SPACING)*rows + xOffset;
 		int windowHeight = (int)(model.getCellHeight()+CARD_SPACING)*cols + yOffset;
 		setSize(windowWidth < minWidth ? minWidth:windowWidth,
@@ -378,11 +390,11 @@ public class Concentration extends GraphicsProgram implements ChangeListener {
 	 */
 	public void gameOverNotification(ArrayList<Integer> winners) {
 		String str;
-		if(winners.size() == 1) {
+		if(winners.size() == 1) {//in the event of 1 winner
 			str = "Player " + winners.get(0) + " wins!";
 			playSound(WIN_SOUND);
 		}
-		else {
+		else {//in the event of multiple winners
 			str = "Players " + winners.get(0);
 			for(int i = 1; i < winners.size(); i++)
 				str += " and " + winners.get(i);
