@@ -13,10 +13,10 @@ public class Dictionary {
 	/** Create a dictionary.  Default constructor uses a default (internal) dictionary. */
 	public Dictionary() {
 		dictionary = new String[] {
-				"algorithm",
+				"croissant",
 				"application",
 				"bus",
-				"byte",
+				"lunch",
 				"computer",
 				"database",
 				"hard disk",
@@ -24,10 +24,10 @@ public class Dictionary {
 				"memory",
 				"modem",
 				"monitor",
-				"mouse",
+				"cardboard",
 				"network",
 				"operating system",
-				"program",
+				"vulture",
 				"software",
 				"hardware"
 		};

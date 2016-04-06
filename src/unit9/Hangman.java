@@ -14,6 +14,14 @@ import acm.graphics.GLine;
 import acm.graphics.GPoint;
 import acm.program.GraphicsProgram;
 
+/**
+ * Project 11 - Hangman<br>
+ * Ozaner Hansha, Armen<br>
+ * Dr. Jones<br>
+ * AP Computer Science<br>
+ * April 4th, 2016<br>
+ */
+@SuppressWarnings("serial")
 public class Hangman extends GraphicsProgram implements HangmanView {
 
 	/**
@@ -48,6 +56,9 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 	 */
 	private GHangman graphics = new GHangman();
 	
+	/**
+	 * The new round button.
+	 */
 	private JButton newGameButton = new JButton("New Round");
 	
 	/**
@@ -60,9 +71,20 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 	 */
 	private HangmanModel model = new HangmanModel(this,graphics.getMaxParts()-1);
 	
+	/**
+	 * Stores letter spaces for later reference (removal).
+	 */
 	private ArrayList<GLine> lineBuffer = new ArrayList<GLine>();
+	
+	/**
+	 * Stores letter objects for letter reference (removal/visibility).
+	 */
 	private ArrayList<GLabel> letterBuffer = new ArrayList<GLabel>();
 	
+	/**
+	 * Initializes the GUI.
+	 * @see acm.program.GraphicsProgram#init()
+	 */
 	@Override
 	public void init() {
 		setSize(WINDOW_SIZE);
@@ -85,23 +107,39 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 		model.newRound();
 	}
 	
+	/**
+	 * Catches button press events.
+	 * @see acm.program.Program#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("New Round"))
 			model.newRound();
 	}
 	
+	/**
+	 * Catches enter key events.
+	 * @see acm.program.Program#keyPressed(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 			model.newRound();
 	}
 	
+	/**
+	 * Catches keyboard key events.
+	 * @see acm.program.Program#keyTyped(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyTyped(KeyEvent e) {
 		model.guess(Character.toUpperCase(e.getKeyChar()));
 	}
 	
+	/**
+	 * Sets up the given word for this round.
+	 * @see unit9.HangmanView#gameStartNotification(java.lang.String)
+	 */
 	@Override
 	public void gameStartNotification(String word) {
 		notifications.setText("Welcome to Hangman! Type to guess a letter.");
@@ -122,13 +160,28 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 				add(label,x*(LINE_LENGTH+LINE_GAP)+(LINE_LENGTH-label.getWidth())/2+offset,LINE_Y);
 			}
 		}
+		
+		for(int x = 0; x < 26; x++) {
+			GLabel temp = new GLabel(""+((char)(x + 65))); //Uppercase Letter starting at A.
+			temp.setFont(LETTER_FONT);
+			temp.setColor(Color.GREEN);
+			add(temp,430+(x%9)*(50+10),200+((x/9)*50));
+		}
 	}
 	
+	/**
+	 * Displays winning message.
+	 * @see unit9.HangmanView#gameWonNotification()
+	 */
 	@Override
 	public void gameWonNotification() {
 		notifications.setText("You won.");
 	}
 	
+	/**
+	 * Displays losing message.
+	 * @see unit9.HangmanView#gameLostNotification()
+	 */
 	@Override
 	public void gameLostNotification() {
 		notifications.setText("You lost.");
@@ -141,6 +194,9 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 		}
 	}
 	
+	/**
+	 * Resets the GUI.
+	 */
 	public void reset() {
 		for(GLine g: lineBuffer)
 			remove(g);
@@ -151,6 +207,10 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 		graphics.reset();
 	}
 	
+	/**
+	 * Displays correct notification and shows the correct letter.
+	 * @see unit9.HangmanView#correctNotification(char)
+	 */
 	@Override
 	public void correctNotification(char c) {
 		notifications.setText("Nice Job!");
@@ -159,17 +219,29 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 				g.setVisible(true);
 	}
 	
+	/**
+	 * Displays incorrect notification.
+	 * @see unit9.HangmanView#incorrectNotification(char)
+	 */
 	@Override
 	public void incorrectNotification(char c) {
 		notifications.setText("That letter was incorrect. Try again.");
 		graphics.drawNextPart();
 	}
 	
+	/**
+	 * Displays already guessed notification.
+	 * @see unit9.HangmanView#alreadyGuessedNotification(char)
+	 */
 	@Override
 	public void alreadyGuessedNotification(char c) {
 		notifications.setText("That letter has already been guessed. Try again.");
 	}
 	
+	/**
+	 * Starts the program.
+	 * @param args - No arguments expected.
+	 */
 	public static void main(String[] args) {
 		new Hangman().start();
 	}

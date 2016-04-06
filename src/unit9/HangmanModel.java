@@ -3,6 +3,11 @@ package unit9;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Model for {@link Hangman} game. Stores state of game
+ * & notifies {@link HangmanView} of events.
+ * @author Ozaner Hansha
+ */
 public class HangmanModel {
 	
 	/**
@@ -50,6 +55,9 @@ public class HangmanModel {
 		this.maxGuesses = maxGuesses;
 	}
 	
+	/**
+	 * Resets variables and starts new round.
+	 */
 	public void newRound() {
 		guesses = 0;
 		guessedLetters.clear();
@@ -61,14 +69,26 @@ public class HangmanModel {
 		view.gameStartNotification(currentWord);
 	}
 	
+	/**
+	 * Returns whether or not the game has been won.
+	 * @return - Win status of the game.
+	 */
 	public boolean gameWon() {
+		//If the set of characters in the currentWord is a subset of the guessed letters.
+		//Then game has been won.
 		Set<Character> s = new HashSet<Character>();
 		for(char c: currentWord.toCharArray()) {
-			s.add(c);
+				s.add(c);
 		}
+		s.remove(' ');
 		return guessedLetters.containsAll(s);
 	}
 	
+	/**
+	 * Checks if guess is valid and guesses if so.
+	 * Ends game if guesses exceed {@link #maxGuesses} or {@link #gameWon()} is true.
+	 * @param c - Letter being guessed.
+	 */
 	public void guess(char c) {
 		if(!gameOver) {
 			if(!guessedLetters.contains(c)) {
