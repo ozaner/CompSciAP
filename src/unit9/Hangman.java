@@ -161,12 +161,12 @@ public class Hangman extends GraphicsProgram implements HangmanView {
 			}
 		}
 		
-		for(int x = 0; x < 26; x++) {
-			GLabel temp = new GLabel(""+((char)(x + 65))); //Uppercase Letter starting at A.
-			temp.setFont(LETTER_FONT);
-			temp.setColor(Color.GREEN);
-			add(temp,430+(x%9)*(50+10),200+((x/9)*50));
-		}
+//		for(int x = 0; x < 26; x++) {
+//			GLabel temp = new GLabel(""+((char)(x + 65))); //Uppercase Letter starting at A.
+//			temp.setFont(LETTER_FONT);
+//			temp.setColor(Color.GREEN);
+//			add(temp,430+(x%9)*(50+10),200+((x/9)*50));
+//		}
 	}
 	
 	/**
