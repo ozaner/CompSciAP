@@ -27,23 +27,25 @@ public class SetIntersection {
 		output = System.out;                                // for stdout
 //		output = new PrintWriter(new FileWriter(args[1]));  // for file writing
     	
-		Set<Integer> set1;
-	    Set<Integer> set2;
-	    Set<Integer> set3;
+	Set<Integer> set1;
+	Set<Integer> set2;
+	Set<Integer> set3;
 		
     	String line = input.nextLine();
-    	line = input.nextLine();
     	Scanner scline = new Scanner(line);
+        int n = decline.nextInt();
     	
+        for(int x = n; x >= 3; x-=3)
+        line = input.nextLine();
     	set1 = getSet(scline);
     	line = input.nextLine();
     	set2 = getSet(scline);
     	line = input.nextLine();
     	set3 = getSet(scline);
-    	line = input.nextLine();
-    	
-    	
-    	
+        set1.retianAll(set2);
+        set1.retainAll(set3);
+        output.println(set1);
+        }
     	scline.close();
         output.flush();
         input.close();
