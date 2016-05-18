@@ -6,15 +6,12 @@ public class Board extends GCompound{
 	
 	private Cell[][] board;
 	
-	private double percentOfMines = .5;
+	private int amountOfMines;
 	
-	public Board(int r, int c) {
+	public Board(int r, int c, int amountOfMines) {
+		this.amountOfMines = amountOfMines;
 		board = new Cell[r][c];
-		
-		//Populate board with cells
-		for(int x = 0; x < r; x++)
-			for(int y = 0; y < c; y++)
-				board[x][y] = getCell(x,y);
+		populateBoard(r,c); //Populate board with cells
 		
 		//Add Cells to GComound
 		for(int x = 0; x < r; x++)
@@ -22,13 +19,17 @@ public class Board extends GCompound{
 				add(board[x][y],x*Cell.CELL_WIDTH,y*Cell.CELL_HEIGHT);
 	}
 	
-	private Cell getCell(int x, int y) {
-		Cell c;
-		if(Math.random() < percentOfMines)
-			c = new BlankCell(x,y);
-		else
-			c = new MineCell(x,y);
-		return c;
+	private Cell populateBoard(int r, int c) {
+		int minesLeft = amountOfMines;
+		while(amountOfMines > 0) {
+			for(int x = 0; x < r; x++)
+				for(int y = 0; y < c; y++)
+					if(Math.random() > .5 && amountOfMines > 0) {
+						board[x][y] = new MineCell(x,y);
+						amountOfMines--;
+					}
+					else
+		}
 	}
 	
 	/**

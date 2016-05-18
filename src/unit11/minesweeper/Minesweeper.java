@@ -31,6 +31,13 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	private int difficulty;
 	
+	//GUI
+	private JRadioButton[] difficulties = {new JRadioButton("Easy"),
+			new JRadioButton("Normal"),new JRadioButton("Hard")
+	};
+	
+	private ButtonGroup difficultyGroup = new ButtonGroup();
+	
 	/**
 	 * Create a Minesweeper game.
 	 */
@@ -41,16 +48,11 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	public void init() {
 		board = new Board(5,5);
-		JRadioButton easy = new JRadioButton("Easy");
-		JRadioButton normal = new JRadioButton("Normal");
-		JRadioButton hard = new JRadioButton("Hard");
-		ButtonGroup difficulties = new ButtonGroup();
-		difficulties.add(easy);
-		difficulties.add(normal);
-		difficulties.add(hard);
-		add(easy,WEST);
-		add(normal,WEST);
-		add(hard,WEST);
+		
+		for(JRadioButton b: difficulties) {
+			add(b,WEST);
+			difficultyGroup.add(b);
+		}
 		add(board);
 	}
 	

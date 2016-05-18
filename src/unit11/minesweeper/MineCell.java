@@ -19,6 +19,7 @@ public class MineCell extends Cell {
 	 */
 	@Override
 	public void reveal() {
+		revealed = true;
 		
 	}
 }

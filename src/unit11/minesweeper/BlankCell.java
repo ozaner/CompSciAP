@@ -18,7 +18,7 @@ public class BlankCell extends Cell {
 	 * @see unit11.minesweeper.Cell#reveal()
 	 */
 	@Override
-	public void reveal(Board board) {
-		
+	public void reveal() {
+		revealed = true;
 	}
 }

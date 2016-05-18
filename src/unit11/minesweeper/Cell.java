@@ -38,6 +38,11 @@ public abstract class Cell extends GCompound {
 		revealed = false;
 	}
 	
+	public void updateMineCount(Board board) {
+		if(board.get)
+	}
+	
+	
 	/**
 	 * Any subclass of Cell must implement this method to change the 
 	 * appearance and state of the cell to reflect its being revealed.
