@@ -1,0 +1,17 @@
+algorithm
+application
+bus
+byte
+computer
+database
+hard disk
+keyboard
+memory
+modem
+monitor
+mouse
+network
+operating system
+program
+software
+hardware
