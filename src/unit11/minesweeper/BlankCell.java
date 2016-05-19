@@ -1,6 +1,7 @@
 package unit11.minesweeper;
 
 import java.awt.Color;
+import java.awt.Font;
 
 /**
  * @author Ozaner Hansha
@@ -22,6 +23,7 @@ public class BlankCell extends Cell {
 	@Override
 	public void reveal(Board board, boolean firstMine) {
 		setBackground(Color.GRAY);
+		this.setFont(new Font("Times New Roman", 0, 13));
 		if(getMineCount(board) > 0)
 			setText(""+getMineCount(board));
 		setIcon(null);

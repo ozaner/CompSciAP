@@ -16,8 +16,8 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public abstract class Cell extends JButton {
 
-	public static final int CELL_WIDTH = 50;
-	public static final int CELL_HEIGHT = 50;
+	public static final int CELL_WIDTH = 40;
+	public static final int CELL_HEIGHT = 40;
 	
 	protected int row, col;
 	protected boolean revealed;
