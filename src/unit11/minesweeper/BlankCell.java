@@ -4,8 +4,8 @@ import java.awt.Color;
 
 /**
  * @author Ozaner Hansha
- *
  */
+@SuppressWarnings("serial")
 public class BlankCell extends Cell {
 
 	/**

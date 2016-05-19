@@ -21,8 +21,9 @@ public abstract class Cell extends JButton {
 	
 	protected int row, col;
 	protected boolean revealed;
+	protected boolean marked;
 	
-	ImageIcon FLAG;
+	private static ImageIcon FLAG;
 	
 	/**
 	 * Creates a Minesweeper Cell given a row and a column.
@@ -42,7 +43,7 @@ public abstract class Cell extends JButton {
 		Cell cell = this;
 		addMouseListener(new MouseAdapter(){
 		    public void mouseClicked(MouseEvent e){
-		    	if(e.isMetaDown())
+		    	if(e.isMetaDown() && !cell.isRevealed())
 		    		cell.mark();
 		    }
 		});
@@ -86,6 +87,10 @@ public abstract class Cell extends JButton {
 				(getCol() == cell.getCol() && Math.abs(getRow() - cell.getRow()) == 1);
 	}
 	
+	public boolean isMarked() {
+		return marked;
+	}
+	
 	/**
 	 * Getter for the cell's row.
 	 * @return   the row
@@ -103,10 +108,14 @@ public abstract class Cell extends JButton {
 	}
 	
 	public void mark() {
-		if(getIcon() != null)
+		if(marked) {
 			setIcon(null);
-		else
+			marked = false;
+		}
+		else {
 			setIcon(FLAG);
+			marked = true;
+		}
 	}
 	
 	/**
