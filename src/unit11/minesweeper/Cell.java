@@ -1,8 +1,11 @@
 package unit11.minesweeper;
 
 import java.awt.Color;
-import acm.graphics.GCompound;
-import acm.graphics.GRect;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  * An abstract class that models a Minesweeper cell.
@@ -11,15 +14,15 @@ import acm.graphics.GRect;
  */
 
 @SuppressWarnings("serial")
-public abstract class Cell extends GCompound {
+public abstract class Cell extends JButton {
 
 	public static final int CELL_WIDTH = 50;
 	public static final int CELL_HEIGHT = 50;
 	
-	// the instance variables are protected for convenient access by the subclasses
 	protected int row, col;
 	protected boolean revealed;
-	protected int mineCount;
+	
+	ImageIcon FLAG;
 	
 	/**
 	 * Creates a Minesweeper Cell given a row and a column.
@@ -28,18 +31,34 @@ public abstract class Cell extends GCompound {
 	 * @param c
 	 */
 	public Cell(int r, int c) {
-		super();
-		GRect rect = new GRect(CELL_WIDTH, CELL_WIDTH);
-		rect.setFillColor(Color.BLUE);
-		rect.setFilled(true);
-		add(rect, 0, 0);
+		super("");
+		setSize(CELL_WIDTH,CELL_HEIGHT);
+		setBackground(Color.BLUE);
+		Image flag = new ImageIcon("minesweeperRes/flag.png").getImage();
+		FLAG = new ImageIcon(flag.getScaledInstance(Cell.CELL_WIDTH, Cell.CELL_HEIGHT, 0));
 		row = r;
 		col = c;
 		revealed = false;
+		Cell cell = this;
+		addMouseListener(new MouseAdapter(){
+		    public void mouseClicked(MouseEvent e){
+		    	if(e.isMetaDown())
+		    		cell.mark();
+		    }
+		});
 	}
 	
-	public void updateMineCount(Board board) {
-		if(board.get)
+	/**
+	 * @param board - Board this cell is contained in.
+	 * @return Amount of mines within 1 square of this cell.
+	 */
+	public int getMineCount(Board board) {
+		int count = 0;
+		for(int x = -1; x < 2; x++)
+			for(int y = -1; y < 2; y++)
+				if(board.getCellAt(row+x, col+y) instanceof MineCell)
+					count++;
+		return count;
 	}
 	
 	
@@ -47,7 +66,7 @@ public abstract class Cell extends GCompound {
 	 * Any subclass of Cell must implement this method to change the 
 	 * appearance and state of the cell to reflect its being revealed.
 	 */
-	public abstract void reveal();
+	public abstract void reveal(Board board, boolean firstMine);
 	
 	/**
 	 * Test if the cell has been revealed.
@@ -56,22 +75,17 @@ public abstract class Cell extends GCompound {
 	public boolean isRevealed() {
 		return revealed;
 	}
-	
-	/**
-	 * A cell has a count of the surrounding mines.
-	 */
-	public void addToMineCount() {
-		mineCount++;
-	}
-	
-	/**
-	 * Getter for the mine count.
-	 * @return
-	 */
-	public int getMineCount() {
-		return mineCount;
-	}
 
+	/**
+	 * @param cell1
+	 * @param cell2
+	 * @return Whether the 2 cells are adjacent.
+	 */
+	public boolean isAdjacent(Cell cell) {
+		return (getRow() == cell.getRow() && Math.abs(getCol() - cell.getCol()) == 1) ||
+				(getCol() == cell.getCol() && Math.abs(getRow() - cell.getRow()) == 1);
+	}
+	
 	/**
 	 * Getter for the cell's row.
 	 * @return   the row
@@ -86,6 +100,13 @@ public abstract class Cell extends GCompound {
 	 */
 	public int getCol() {
 		return col;
+	}
+	
+	public void mark() {
+		if(getIcon() != null)
+			setIcon(null);
+		else
+			setIcon(FLAG);
 	}
 	
 	/**
