@@ -2,11 +2,14 @@ package unit11.minesweeper;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
 import acm.program.GraphicsProgram;
 
 /**
@@ -52,6 +55,8 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	private static final int HEIGHT_OFFSET = 62;
 	
+	private int wins, losses;
+	
 	/**
 	 * Array of difficulty buttons.
 	 */
@@ -63,6 +68,9 @@ public class Minesweeper extends GraphicsProgram {
 	 * Groups Difficulty buttons.
 	 */
 	private ButtonGroup difficultyGroup = new ButtonGroup();
+	
+	private JLabel winsTag = new JLabel("Wins: 0");
+	private JLabel lossesTag = new JLabel("Losses: 0");
 	
 	/**
 	 * New Game Button
@@ -118,6 +126,9 @@ public class Minesweeper extends GraphicsProgram {
 		customMines.addActionListener(this);
 		customMines.setEnabled(false);
 		updateTextBoxes();
+		
+		add(winsTag,WEST);
+		add(lossesTag,WEST);
 		
 		reset();
 		addActionListeners();
@@ -221,12 +232,16 @@ public class Minesweeper extends GraphicsProgram {
 				board.reveal(cell,true);
 				if(cell instanceof MineCell) {
 					JOptionPane.showMessageDialog(this, "You Lose!");
+					losses++;
+					lossesTag.setText("Losses: "+ losses);
 					board.revealAll();
 				}
 				else if(cell instanceof BlankCell) {
 					revealBlanks(cell);
 					if(board.allBlanksRevealed()) {
 						JOptionPane.showMessageDialog(this, "You Win!");
+						wins++;
+						winsTag.setText("Wins: "+ wins);
 						board.revealAll();
 					}
 				}
