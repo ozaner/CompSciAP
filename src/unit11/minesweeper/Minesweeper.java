@@ -143,6 +143,19 @@ public class Minesweeper extends GraphicsProgram {
 			currentCols = Integer.parseInt(customCols.getText());
 			currentMines = Integer.parseInt(customMines.getText());
 		}
+		if(currentRows < 2)
+			currentRows = 2;
+		if(currentRows > 20)
+			currentRows = 20;
+		if(currentCols < 2)
+			currentCols = 2;
+		if(currentCols > 31)
+			currentCols = 31;
+		if(currentMines > currentRows*currentCols)
+			currentRows = currentRows*currentCols-1;
+		updateTextBoxes();
+		
+		
 		removeAll(); //removes old board
 		board = new Board(currentRows,currentCols,currentMines); //create new board
 		

@@ -1,5 +1,9 @@
 package unit11.minesweeper;
 
+import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Board {
 	
 	/**
@@ -11,11 +15,6 @@ public class Board {
 	 * amount of mines on this board.
 	 */
 	private int amountOfMines;
-	
-	/**
-	 * Chance of generating a mine per square.
-	 */
-	private static final double CHANCE_OF_MINE = .9;
 	
 	/**
 	 * Creates a new board with the given amounts of rows, columns, and mines.
@@ -36,19 +35,18 @@ public class Board {
 	 * @param c
 	 */
 	private void populateBoard(int r, int c) {
-		int minesLeft = amountOfMines;
-		while(minesLeft > 0) {
-			for(int x = 0; x < r; x++)
-				for(int y = 0; y < c; y++) {
-					if(!(getCellAt(x,y) instanceof MineCell))
-						if(Math.random() > CHANCE_OF_MINE && minesLeft > 0) {
-							board[x][y] = new MineCell(x,y);
-							minesLeft--;
-						}
-						else
-							board[x][y] = new BlankCell(x,y);
-			}				
+		Set<Point> mineLocations = new HashSet<Point>();
+		while(mineLocations.size() != amountOfMines) {
+			int x = (int)(Math.random()*getRows());
+			int y = (int)(Math.random()*getCols());
+			mineLocations.add(new Point(x,y));
 		}
+		for(int x = 0; x < r; x++)
+			for(int y = 0; y < c; y++)
+				if(mineLocations.contains(new Point(x,y)))
+					board[x][y] = new MineCell(x,y);
+				else
+					board[x][y] = new BlankCell(x,y);
 	}
 	
 	/**
