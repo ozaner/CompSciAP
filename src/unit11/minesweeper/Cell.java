@@ -62,7 +62,6 @@ public abstract class Cell extends JButton {
 		return count;
 	}
 	
-	
 	/**
 	 * Any subclass of Cell must implement this method to change the 
 	 * appearance and state of the cell to reflect its being revealed.
@@ -76,7 +75,7 @@ public abstract class Cell extends JButton {
 	public boolean isRevealed() {
 		return revealed;
 	}
-
+	
 	/**
 	 * @param cell1
 	 * @param cell2

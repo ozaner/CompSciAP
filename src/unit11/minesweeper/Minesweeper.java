@@ -58,7 +58,7 @@ public class Minesweeper extends GraphicsProgram {
 	private int wins, losses;
 	
 	/**
-	 * Array of difficulty buttons.
+	 *101 0Array of difficulty buttons.
 	 */
 	private JRadioButton[] difficulties = {new JRadioButton("Easy"),
 			new JRadioButton("Normal"),new JRadioButton("Hard"), new JRadioButton("Custom")
@@ -244,7 +244,12 @@ public class Minesweeper extends GraphicsProgram {
 			if(!cell.isMarked()) {
 				board.reveal(cell,true);
 				if(cell instanceof MineCell) {
-					JOptionPane.showMessageDialog(this, "You Lose!");
+					Object[] options = {"Continue", "Exit"};
+					int choice = JOptionPane.showOptionDialog(this, "You Lose!", "You Lose!",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+							null, options, options[0]);
+					if(choice == 1)
+						System.exit(0);
 					losses++;
 					lossesTag.setText("Losses: "+ losses);
 					board.revealAll();
@@ -252,8 +257,13 @@ public class Minesweeper extends GraphicsProgram {
 				else if(cell instanceof BlankCell) {
 					revealBlanks(cell);
 					if(board.allBlanksRevealed()) {
-						JOptionPane.showMessageDialog(this, "You Win!");
 						wins++;
+						Object[] options = {"Continue", "Exit"};
+						int choice = JOptionPane.showOptionDialog(this, "You Win!", "You Win!",
+								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+								null, options, options[0]);
+						if(choice == 1)
+							System.exit(0);
 						winsTag.setText("Wins: "+ wins);
 						board.revealAll();
 					}
