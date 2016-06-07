@@ -1,5 +1,6 @@
 package unit11.minesweeper;
 
+import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
@@ -11,6 +12,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import acm.program.GraphicsProgram;
+import acm.util.MediaTools;
 
 /**
  * The classic Minesweeper game, (c) Microsoft.
@@ -72,6 +74,10 @@ public class Minesweeper extends GraphicsProgram {
 	private JLabel winsTag = new JLabel("Wins: 0");
 	private JLabel lossesTag = new JLabel("Losses: 0");
 	
+	private JLabel timer = new JLabel("Time Taken: 0");
+	
+	
+	
 	/**
 	 * New Game Button
 	 */
@@ -101,6 +107,12 @@ public class Minesweeper extends GraphicsProgram {
 	 * Initializes the board, which is also the GUI.
 	 */
 	public void init() {
+//		SoundClip s = new SoundClip(new File("minesweeperRes/bomb.wav"));
+//		s.play();
+		
+		AudioClip bombSound = MediaTools.loadAudioClip("minesweeperRes/bomb.wav");
+		bombSound.play();
+		
 		//Difficulty options
 		for(JRadioButton b: difficulties) {
 			difficultyGroup.add(b);
@@ -129,6 +141,7 @@ public class Minesweeper extends GraphicsProgram {
 		
 		add(winsTag,WEST);
 		add(lossesTag,WEST);
+		add(timer,WEST);
 		
 		reset();
 		addActionListeners();
