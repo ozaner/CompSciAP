@@ -1,18 +1,17 @@
 package unit11.minesweeper;
 
-import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-
+import java.io.File;
+import java.util.Date;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-
 import acm.program.GraphicsProgram;
-import acm.util.MediaTools;
+import acm.util.SoundClip;
 
 /**
  * The classic Minesweeper game, (c) Microsoft.
@@ -33,6 +32,10 @@ public class Minesweeper extends GraphicsProgram {
 	private static final Dimension NORMAL_DIM = new Dimension(16,16);
 	private static final Dimension HARD_DIM = new Dimension(16,31);
 	
+	private static final int MIN_DIM = 2;
+	private static final int MAX_ROWS = 20;
+	private static final int MAX_COLS = 31;
+	
 	private static final int EASY_MINES = 10;
 	private static final int NORMAL_MINES = 40;
 	private static final int HARD_MINES = 99;
@@ -43,9 +46,9 @@ public class Minesweeper extends GraphicsProgram {
 	private int currentMines = (int)EASY_MINES;
 	
 	/**
-	 * A Board of cells.
+	 * Sound clip of a mine exploding.
 	 */
-	private Board board;
+	public static final SoundClip bombSound = new SoundClip(new File("minesweeperRes/bomb.wav"));
 	
 	/**
 	 * Amount to offset the width on account of the GUI
@@ -57,10 +60,18 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	private static final int HEIGHT_OFFSET = 62;
 	
+	/**
+	 * Amount of wins and losses.
+	 */
 	private int wins, losses;
 	
 	/**
-	 *101 0Array of difficulty buttons.
+	 * A Board of cells.
+	 */
+	private Board board;
+	
+	/**
+	 * Array of difficulty buttons.
 	 */
 	private JRadioButton[] difficulties = {new JRadioButton("Easy"),
 			new JRadioButton("Normal"),new JRadioButton("Hard"), new JRadioButton("Custom")
@@ -71,12 +82,25 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	private ButtonGroup difficultyGroup = new ButtonGroup();
 	
-	private JLabel winsTag = new JLabel("Wins: 0");
-	private JLabel lossesTag = new JLabel("Losses: 0");
+	/**
+	 * JLabel for wins and losses.
+	 */
+	private JLabel winsTag = new JLabel("Wins: 0"), lossesTag = new JLabel("Losses: 0");
 	
+	/**
+	 * JLabel for time.
+	 */
 	private JLabel timer = new JLabel("Time Taken: 0");
 	
+	/**
+	 * When the round started.
+	 */
+	private Date start = new Date();
 	
+	/**
+	 * Thread that keep track of the timer.
+	 */
+	private Thread timeThread;
 	
 	/**
 	 * New Game Button
@@ -107,11 +131,7 @@ public class Minesweeper extends GraphicsProgram {
 	 * Initializes the board, which is also the GUI.
 	 */
 	public void init() {
-//		SoundClip s = new SoundClip(new File("minesweeperRes/bomb.wav"));
-//		s.play();
-		
-		AudioClip bombSound = MediaTools.loadAudioClip("minesweeperRes/bomb.wav");
-		bombSound.play();
+		bombSound.setVolume(.5);
 		
 		//Difficulty options
 		for(JRadioButton b: difficulties) {
@@ -156,18 +176,19 @@ public class Minesweeper extends GraphicsProgram {
 			currentCols = Integer.parseInt(customCols.getText());
 			currentMines = Integer.parseInt(customMines.getText());
 		}
-		if(currentRows < 2)
-			currentRows = 2;
-		if(currentRows > 20)
-			currentRows = 20;
-		if(currentCols < 2)
-			currentCols = 2;
-		if(currentCols > 31)
-			currentCols = 31;
+		
+		//Check if board size is within bounds.
+		if(currentRows < MIN_DIM)
+			currentRows = MIN_DIM;
+		if(currentRows > MAX_ROWS)
+			currentRows = MAX_ROWS;
+		if(currentCols < MIN_DIM)
+			currentCols = MIN_DIM;
+		if(currentCols > MAX_COLS)
+			currentCols = MAX_COLS;
 		if(currentMines > currentRows*currentCols)
 			currentRows = currentRows*currentCols-1;
 		updateTextBoxes();
-		
 		
 		removeAll(); //removes old board
 		board = new Board(currentRows,currentCols,currentMines); //create new board
@@ -181,6 +202,21 @@ public class Minesweeper extends GraphicsProgram {
 		
 		//Set Size
 		setSize(board.getCols()*Cell.CELL_WIDTH+WIDTH_OFFSET, board.getRows()*Cell.CELL_HEIGHT+HEIGHT_OFFSET);
+		
+		start.setTime(new Date().getTime());
+		//Aliases for the thread below
+		JLabel t = timer;
+		Date s = start;
+		
+		timeThread = new Thread() {
+			public void run() {
+				while(true) {
+					Date now = new Date();
+					t.setText("Time Taken: "+(new Date(now.getTime() - s.getTime())).getSeconds());
+				}
+			}
+		};
+		timeThread.start();
 	}
 	
 	/**
@@ -257,6 +293,8 @@ public class Minesweeper extends GraphicsProgram {
 			if(!cell.isMarked()) {
 				board.reveal(cell,true);
 				if(cell instanceof MineCell) {
+					bombSound.play();
+					timeThread.stop();
 					Object[] options = {"Continue", "Exit"};
 					int choice = JOptionPane.showOptionDialog(this, "You Lose!", "You Lose!",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -270,13 +308,14 @@ public class Minesweeper extends GraphicsProgram {
 				else if(cell instanceof BlankCell) {
 					revealBlanks(cell);
 					if(board.allBlanksRevealed()) {
-						wins++;
+						timeThread.stop();
 						Object[] options = {"Continue", "Exit"};
 						int choice = JOptionPane.showOptionDialog(this, "You Win!", "You Win!",
 								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
 								null, options, options[0]);
 						if(choice == 1)
 							System.exit(0);
+						wins++;
 						winsTag.setText("Wins: "+ wins);
 						board.revealAll();
 					}
