@@ -212,7 +212,11 @@ public class Minesweeper extends GraphicsProgram {
 			public void run() {
 				while(true) {
 					Date now = new Date();
-					t.setText("Time Taken: "+(new Date(now.getTime() - s.getTime())).getSeconds());
+					Date difference = new Date(now.getTime() - s.getTime());
+					if(difference.getSeconds() > 9)
+						t.setText("Time Taken: "+ difference.getMinutes() + ":" + difference.getSeconds());
+					else
+						t.setText("Time Taken: "+ difference.getMinutes() + ":0" + difference.getSeconds());
 				}
 			}
 		};
