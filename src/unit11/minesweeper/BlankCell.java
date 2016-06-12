@@ -4,20 +4,23 @@ import java.awt.Color;
 import java.awt.Font;
 
 /**
+ * Class extending {@link Cell} but without a mine.
  * @author Ozaner Hansha
  */
 @SuppressWarnings("serial")
 public class BlankCell extends Cell {
 
 	/**
-	 * @param r
-	 * @param c
+	 * @param r - row
+	 * @param c - column
 	 */
 	public BlankCell(int r, int c) {
 		super(r, c);
 	}
 	
 	/**
+	 * Reveals the cell by turning it gray and displaying 
+	 * the amount of mines present, unless it is 0.
 	 * @see unit11.minesweeper.Cell#reveal()
 	 */
 	@Override

@@ -8,9 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
- * An abstract class that models a Minesweeper cell.
- * @author Mark Jones
- *
+ * Abstract class representing a Minesweeper Cell.
+ * @author Ozaner Hansha
  */
 
 @SuppressWarnings("serial")

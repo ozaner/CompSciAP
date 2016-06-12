@@ -4,6 +4,10 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a Minesweeper Board. Made for us with {@link Cell}s.
+ * @author Ozaner Hansha
+ */
 public class Board {
 	
 	/**
@@ -79,7 +83,7 @@ public class Board {
 	 * @param cell
 	 */
 	public void reveal(Cell cell, boolean firstMine) {
-		board[cell.getRow()][cell.getCol()].reveal(this, firstMine);
+		getCellAt(cell.getRow(),cell.getCol()).reveal(this, firstMine);
 	}
 	
 	/**
@@ -91,6 +95,65 @@ public class Board {
 				if(getCellAt(x,y) instanceof BlankCell && !getCellAt(x,y).isRevealed())
 					return false;
 		return true;
+	}
+	
+	/**
+	 * Reveals all blanks in an area contained within mines or the edge.
+	 * @param cell
+	 */
+	public void revealBlanks(Cell cell) {
+		if(cell.getMineCount(this) == 0) {
+			revealBlanksHelper(getCellAt(cell.getRow()-1, cell.getCol()-1));
+			revealBlanksHelper(getCellAt(cell.getRow()-1, cell.getCol()));
+			revealBlanksHelper(getCellAt(cell.getRow()-1, cell.getCol()+1));
+			
+			revealBlanksHelper(getCellAt(cell.getRow(), cell.getCol()-1));
+			revealBlanksHelper(getCellAt(cell.getRow(), cell.getCol()+1));
+			
+			revealBlanksHelper(getCellAt(cell.getRow()+1, cell.getCol()-1));
+			revealBlanksHelper(getCellAt(cell.getRow()+1, cell.getCol()));
+			revealBlanksHelper(getCellAt(cell.getRow()+1, cell.getCol()+1));
+		}
+	}
+	
+	/**
+	 * Helps the {@link #revealBlanks(Cell)} method with recursion.
+	 * @param cell
+	 */
+	public void revealBlanksHelper(Cell cell) {
+		if(cell == null || cell.isRevealed()) //Nonexistent|already revealed.
+			return;
+		else if(cell instanceof BlankCell) {
+			if(cell.getMineCount(this) == 0) { //Non-edge blank cell (mines=0)
+				cell.reveal(this, false);
+				revealBlanks(cell);
+			}
+			else //Edge blank cell (mines>0)
+				cell.reveal(this, false);
+		}
+	}
+	
+	/**
+	 * @param cell
+	 * @return 0 if game continued, 1 if game won, 2 if game lost.
+	 */
+	public int clickCell(Cell cell) {
+		if(!cell.isMarked()) {
+			reveal(cell,true);
+			if(cell instanceof MineCell) {
+				revealAll();
+				return 2; //Game Lost
+			}
+			else if(cell instanceof BlankCell) {
+				revealBlanks(cell);
+				if(allBlanksRevealed()) {
+					revealAll();
+					return 1; //Game Won
+				}
+				return 0; //Cell revealed.
+			}
+		}
+		return 0; //Cell already revealed.
 	}
 	
 	/**
