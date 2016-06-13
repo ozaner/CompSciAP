@@ -53,6 +53,16 @@ public class Minesweeper extends GraphicsProgram {
 	public static final SoundClip bombSound = new SoundClip(new File("minesweeperRes/bomb.wav"));
 	
 	/**
+	 * Format for the time taken field.
+	 */
+	public static final SimpleDateFormat TIMER_FORMAT = new SimpleDateFormat("mm:ss");
+	
+	/**
+	 * Location to load/save scores.
+	 */
+	public static final String SCORE_LOCATION = "minesweeperRes/scores.xml";
+	
+	/**
 	 * Amount to offset the width on account of the GUI
 	 */
 	private static final int WIDTH_OFFSET = 129;
@@ -61,11 +71,6 @@ public class Minesweeper extends GraphicsProgram {
 	 * Amount to offset the height on account of the GUI
 	 */
 	private static final int HEIGHT_OFFSET = 62;
-	
-	/**
-	 * Format for the time taken field.
-	 */
-	public static final SimpleDateFormat TIMER_FORMAT = new SimpleDateFormat("mm:ss");
 	
 	/**
 	 * A Board of cells.
@@ -88,6 +93,11 @@ public class Minesweeper extends GraphicsProgram {
 	 * Amount of wins and losses.
 	 */
 	private int wins, losses;
+	
+	/**
+	 * Record of highscores.
+	 */
+	private ScoreSheet scoreSheet = new ScoreSheet();
 	
 	/**
 	 * Whether the game is over or not.
@@ -117,6 +127,7 @@ public class Minesweeper extends GraphicsProgram {
 	 */
 	public void init() {
 		bombSound.setVolume(.5);
+		scoreSheet.loadXML(SCORE_LOCATION);
 		
 		timeThread = new Thread() {
 			public void run() {
@@ -240,17 +251,31 @@ public class Minesweeper extends GraphicsProgram {
 		else if(e.getSource() instanceof Cell && !gameOver) {
 			Cell cell = (Cell) e.getSource();
 			int result = board.clickCell(cell);
+			int time = difference.get(Calendar.SECOND);
+			
+			String title = "",message = "";
 			Object[] options = {"Continue", "Exit"};
 			int choice = 0;
+			
 			switch(result) {
 			case 1: //Game won
 				timeThread.suspend();
 				wins++;
 				updateGUI();
 				gameOver = true;
-				choice = JOptionPane.showOptionDialog(this, "You Win!", "You Win!",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						null, options, options[0]);
+				title = "You Win!";
+				
+				int previousTime = scoreSheet.getScore(board.getRows(), board.getCols());
+				scoreSheet.addScore(board.getRows(), board.getCols(), time);
+				
+				if(previousTime == -1)
+					message = "You Win! Your time was " + time + "s";
+				else if(previousTime > time)
+					message = "You beat the previous high time of "
+							+ previousTime + "s with a score of " + time + "s!";
+				else
+					message = "You Win! Your time was " + time +
+					"s. The record for this config is " + previousTime;
 				break;
 			case 2: //Game lost
 				bombSound.play();
@@ -258,15 +283,19 @@ public class Minesweeper extends GraphicsProgram {
 				losses++;
 				updateGUI();
 				gameOver = true;
-				choice = JOptionPane.showOptionDialog(this, "You Lose!", "You Lose!",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						null, options, options[0]);
+				title = "You Lose!";
+				message = "You Lost! Your time was " + time + "s.";
 				break;
-			default:
-				
+			default: //Continue game if not won or lost.
+				return;
 			}
-			if(choice == 1)
+			choice = JOptionPane.showOptionDialog(this, message, title,
+					JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+					null, options, options[0]);
+			if(choice == 1) {
+				scoreSheet.saveXML(SCORE_LOCATION); //Saves scores before exiting.
 				System.exit(0);
+			}
 		}
 	}
 	

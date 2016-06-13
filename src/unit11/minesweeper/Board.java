@@ -22,31 +22,31 @@ public class Board {
 	
 	/**
 	 * Creates a new board with the given amounts of rows, columns, and mines.
-	 * @param r
-	 * @param c
-	 * @param amountOfMines
+	 * @param r - rows
+	 * @param c - columns
+	 * @param amountOfMines - amount of random mines put on board
 	 */
 	public Board(int r, int c, int amountOfMines) {
 		this.amountOfMines = amountOfMines;
 		board = new Cell[r][c];
-		populateBoard(r,c); //Populate board with cells
+		populateBoard(); //Populate board with cells
 	}
 	
 	/**
 	 * Randomly* Fills the board with the {@link #amountOfMines}
 	 * specified in the constructor.
-	 * @param r
-	 * @param c
+	 * @param r - rows
+	 * @param c - columns
 	 */
-	private void populateBoard(int r, int c) {
+	private void populateBoard() {
 		Set<Point> mineLocations = new HashSet<Point>();
 		while(mineLocations.size() != amountOfMines) {
 			int x = (int)(Math.random()*getRows());
 			int y = (int)(Math.random()*getCols());
 			mineLocations.add(new Point(x,y));
 		}
-		for(int x = 0; x < r; x++)
-			for(int y = 0; y < c; y++)
+		for(int x = 0; x < getRows(); x++)
+			for(int y = 0; y < getCols(); y++)
 				if(mineLocations.contains(new Point(x,y)))
 					board[x][y] = new MineCell(x,y);
 				else
