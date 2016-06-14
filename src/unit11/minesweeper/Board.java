@@ -68,6 +68,13 @@ public class Board {
 	}
 	
 	/**
+	 * @return amount of mines on the board.
+	 */
+	public int getMines() {
+		return amountOfMines;
+	}
+	
+	/**
 	 * @param row
 	 * @param col
 	 * @return The cell at the row & column, null if invalid row and column.

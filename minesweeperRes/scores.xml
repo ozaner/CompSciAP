@@ -2,7 +2,8 @@
 <scores>
     <score>
         <col>8</col>
+        <mines>10</mines>
         <row>8</row>
-        <time>0</time>
+        <time>52</time>
     </score>
 </scores>

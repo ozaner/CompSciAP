@@ -2,6 +2,7 @@ package unit11.minesweeper;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import acm.program.GraphicsProgram;
 import acm.util.SoundClip;
 
@@ -53,11 +55,6 @@ public class Minesweeper extends GraphicsProgram {
 	public static final SoundClip bombSound = new SoundClip(new File("minesweeperRes/bomb.wav"));
 	
 	/**
-	 * Format for the time taken field.
-	 */
-	public static final SimpleDateFormat TIMER_FORMAT = new SimpleDateFormat("mm:ss");
-	
-	/**
 	 * Location to load/save scores.
 	 */
 	public static final String SCORE_LOCATION = "minesweeperRes/scores.xml";
@@ -65,7 +62,7 @@ public class Minesweeper extends GraphicsProgram {
 	/**
 	 * Amount to offset the width on account of the GUI
 	 */
-	private static final int WIDTH_OFFSET = 129;
+	private static final int WIDTH_OFFSET = 121;
 	
 	/**
 	 * Amount to offset the height on account of the GUI
@@ -78,16 +75,14 @@ public class Minesweeper extends GraphicsProgram {
 	private Board board;
 	
 	/**
-	 * When the round started and ended.
-	 */
-	private Calendar timerStart = Calendar.getInstance(),
-			timerEnd = Calendar.getInstance(),
-			difference = Calendar.getInstance();
-	
-	/**
 	 * Thread that keep track of the timer.
 	 */
-	private Thread timeThread;
+	private Timer timer;
+	
+	/**
+	 * current time taken on the board in seconds.
+	 */
+	private int currentTime;
 	
 	/**
 	 * Amount of wins and losses.
@@ -129,16 +124,14 @@ public class Minesweeper extends GraphicsProgram {
 		bombSound.setVolume(.5);
 		scoreSheet.loadXML(SCORE_LOCATION);
 		
-		timeThread = new Thread() {
-			public void run() {
-				while(true) {
-					timerEnd.setTime(new Date());
-					difference.setTimeInMillis(timerEnd.getTimeInMillis() - timerStart.getTimeInMillis());
-					timerLabel.setText("Time Taken: " + TIMER_FORMAT.format(difference.getTime()));
-				}
+		timer = new Timer(1000,new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentTime++;
+				timerLabel.setText("Time Taken: " + currentTime);
 			}
-		};
-		timeThread.start();
+		});
+		timer.start();
 		
 		//Difficulty options
 		for(JRadioButton b: difficulties) {
@@ -211,8 +204,9 @@ public class Minesweeper extends GraphicsProgram {
 		//Set Size
 		setSize(board.getCols()*Cell.CELL_WIDTH+WIDTH_OFFSET, board.getRows()*Cell.CELL_HEIGHT+HEIGHT_OFFSET);
 		
-		timerStart.setTime(Calendar.getInstance().getTime()); //Resets starting time
-		timeThread.resume(); //Starts timer again.
+		currentTime = 0;
+		timerLabel.setText("Time Taken: 0");
+		timer.start();
 	}
 	
 	/** 
@@ -251,7 +245,6 @@ public class Minesweeper extends GraphicsProgram {
 		else if(e.getSource() instanceof Cell && !gameOver) {
 			Cell cell = (Cell) e.getSource();
 			int result = board.clickCell(cell);
-			int time = difference.get(Calendar.SECOND);
 			
 			String title = "",message = "";
 			Object[] options = {"Continue", "Exit"};
@@ -259,32 +252,32 @@ public class Minesweeper extends GraphicsProgram {
 			
 			switch(result) {
 			case 1: //Game won
-				timeThread.suspend();
+				timer.stop();
 				wins++;
 				updateGUI();
 				gameOver = true;
 				title = "You Win!";
 				
 				int previousTime = scoreSheet.getScore(board.getRows(), board.getCols());
-				scoreSheet.addScore(board.getRows(), board.getCols(), time);
+				scoreSheet.addScore(board.getRows(), board.getCols(), board.getMines(), currentTime);
 				
 				if(previousTime == -1)
-					message = "You Win! Your time was " + time + "s";
-				else if(previousTime > time)
-					message = "You beat the previous high time of "
-							+ previousTime + "s with a score of " + time + "s!";
+					message = "You Win! Your time was " + currentTime + "s";
+				else if(previousTime > currentTime)
+					message = "You beat the previous high time of " + previousTime 
+					+ "s with a score of " + currentTime + "s!";
 				else
-					message = "You Win! Your time was " + time +
+					message = "You Win! Your time was " + currentTime +
 					"s. The record for this config is " + previousTime;
 				break;
 			case 2: //Game lost
 				bombSound.play();
-				timeThread.suspend(); //Kills timer thread
+				timer.stop();
 				losses++;
 				updateGUI();
 				gameOver = true;
 				title = "You Lose!";
-				message = "You Lost! Your time was " + time + "s.";
+				message = "You Lost! Your time was " + currentTime + "s.";
 				break;
 			default: //Continue game if not won or lost.
 				return;

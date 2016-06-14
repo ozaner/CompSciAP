@@ -26,6 +26,10 @@ public class ScoreSheet {
 	
 	public ScoreSheet(){}
 	
+	/**
+	 * Saves the current state of the scoresheet in an xml file.
+	 * @param location
+	 */
 	public void saveXML(String location) {
 		try {
 			File file = new File(location);
@@ -40,6 +44,10 @@ public class ScoreSheet {
 		}
 	}
 	
+	/**
+	 * Loads and overrides the current state of the sheet with one form an xml file.
+	 * @param location
+	 */
 	public void loadXML(String location) {
 		try {
 			File file = new File(location);
@@ -49,9 +57,7 @@ public class ScoreSheet {
 			ScoreSheet s = (ScoreSheet)reader.unmarshal(file);
 			scores = s.getScores();
 		}
-		catch (JAXBException e) {
-			
-		}
+		catch (JAXBException e) {}
 	}
 	
 	private List<Score> getScores() {
@@ -64,14 +70,14 @@ public class ScoreSheet {
 	 * @param col - columns of the board.
 	 * @param time - time taken.
 	 */
-	public void addScore(int row, int col, int time) {
+	public void addScore(int row, int col, int mine, int time) {
 		if(col > row) {
 			int temp = col;
 			col = row;
 			row = temp;
 		}
 		if(getScore(row,col) == -1)
-			scores.add(new Score(row,col,time));
+			scores.add(new Score(row,col,mine,time));
 		else if(getScore(row,col) > time) {
 			for(Score s: scores) {
 				if(s.getRow() == row && s.getCol() == col) {
@@ -100,15 +106,20 @@ public class ScoreSheet {
 		return -1;
 	}
 	
+	/**
+	 * A class representing a score for a certain minesweeper config.
+	 * @author Ozaner Hansha
+	 */
 	@XmlType
 	static class Score {
 		int row;
 		int col;
+		int mines;
 		int time;
 		
 		public Score() {}
 		
-		public Score(int row, int col, int time) {
+		public Score(int row, int col, int mines, int time) {
 			//Makes row the biggest number (so 5x6 score = 6x5 score)
 			if(col > row) {
 				int temp = col;
@@ -117,6 +128,7 @@ public class ScoreSheet {
 			}
 			this.row = row;
 			this.col = col;
+			this.mines = mines;
 			this.time = time;
 		}
 		
@@ -136,6 +148,15 @@ public class ScoreSheet {
 		
 		public int getCol(){
 			return col;
+		}
+		
+		@XmlElement
+		public void setMines(int mines){
+			this.mines = mines;
+		}
+		
+		public int getMines(){
+			return mines;
 		}
 		
 		@XmlElement
