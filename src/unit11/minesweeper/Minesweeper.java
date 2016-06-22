@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+
 import acm.program.GraphicsProgram;
 import acm.util.SoundClip;
 
@@ -52,7 +51,7 @@ public class Minesweeper extends GraphicsProgram {
 	/**
 	 * Sound clip of a mine exploding.
 	 */
-	public static final SoundClip bombSound = new SoundClip(new File("minesweeperRes/bomb.wav"));
+	public static final SoundClip BOMB_SOUND = new SoundClip(new File("minesweeperRes/bomb.wav"));
 	
 	/**
 	 * Location to load/save scores.
@@ -121,7 +120,7 @@ public class Minesweeper extends GraphicsProgram {
 	 * Initializes the board, which is also the GUI.
 	 */
 	public void init() {
-		bombSound.setVolume(.5);
+		BOMB_SOUND.setVolume(.5);
 		scoreSheet.loadXML(SCORE_LOCATION);
 		
 		timer = new Timer(1000,new ActionListener() {
@@ -264,14 +263,14 @@ public class Minesweeper extends GraphicsProgram {
 				if(previousTime == -1)
 					message = "You Win! Your time was " + currentTime + "s";
 				else if(previousTime > currentTime)
-					message = "You beat the previous high time of " + previousTime 
+					message = "You beat the previous score of " + previousTime 
 					+ "s with a score of " + currentTime + "s!";
 				else
 					message = "You Win! Your time was " + currentTime +
 					"s. The record for this config is " + previousTime;
 				break;
 			case 2: //Game lost
-				bombSound.play();
+				BOMB_SOUND.play();
 				timer.stop();
 				losses++;
 				updateGUI();
