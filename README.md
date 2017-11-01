@@ -1,5 +1,5 @@
 # CompSciAP
-####Source Code from AP Computer Science
+#### Source Code from AP Computer Science
 Code examples and projects from my 10th Grade AP Computer Science class.
 
 Highlights:
